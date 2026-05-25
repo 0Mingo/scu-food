@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>川大吃什么</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:#faf9f7;color:#1a1a1a;min-height:100vh}
+:root{--warm:#D85A30;--warm-light:#FAECE7;--warm-mid:#F0997B;--star-on:#EF9F27;--star-off:#D3D1C7;--border:#e8e5e0;--bg2:#f3f1ee;--text2:#6b6860;--text3:#9e9b96}
+.app{max-width:680px;margin:0 auto;background:#fff;min-height:100vh;border-left:0.5px solid var(--border);border-right:0.5px solid var(--border)}
+.header{padding:1.1rem 1rem 0.65rem;border-bottom:0.5px solid var(--border)}
+.header h1{font-size:24px;font-weight:600;letter-spacing:-0.3px}
+.header p{font-size:14px;color:var(--text2);margin-top:2px}
+.toolbar{padding:0.6rem 1rem;border-bottom:0.5px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-input{flex:1;min-width:120px;border:0.5px solid #d0cdc8;border-radius:20px;padding:5px 12px;font-size:14px;background:#f3f1ee;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--warm);background:#fff}
+.sort-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pill{font-size:13px;padding:3px 9px;border-radius:20px;border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.pill:hover{background:var(--bg2)}
+.pill.active{background:var(--warm);border-color:var(--warm);color:#fff}
+.dir-btn{font-size:13px;padding:3px 8px;border-radius:20px;border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:3px}
+.dir-btn:hover{background:var(--bg2)}
+.content{padding:0.6rem 1rem}
+.lv1-block{margin-bottom:10px}
+.lv-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:7px 10px;border-radius:8px;user-select:none}
+.lv-row:hover{background:var(--bg2)}
+.lv1-row{background:var(--bg2);border-radius:8px;font-size:15px;font-weight:600}
+.lv2-block{margin:4px 0 4px 10px;border-left:1.5px solid var(--border);padding-left:8px}
+.lv2-row{font-size:14px;font-weight:500;color:var(--text2)}
+.lv3-block{margin:3px 0 3px 8px;border-left:1px solid var(--border);padding-left:8px}
+.stall-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.stall-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;cursor:pointer}
+.stall-hdr:hover{background:var(--bg2)}
+.stall-name{font-size:15px;font-weight:500}
+.stall-meta{font-size:13px;color:var(--text3);margin-top:1px}
+.score-chip{display:flex;align-items:center;gap:5px}
+.score-num{font-size:16px;font-weight:600;color:var(--warm)}
+.stars{display:flex;gap:1px}
+.s{font-size:13px;color:var(--star-off)}.s.on{color:var(--star-on)}
+.ms{font-size:11px;color:var(--star-off)}.ms.on{color:var(--star-on)}
+.chev{font-size:13px;color:var(--text3);transition:transform .2s;display:inline-block}
+.chev.open{transform:rotate(180deg)}
+.dishes{border-top:0.5px solid var(--border)}
+.dish-row{padding:8px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;gap:8px}
+.dish-row:last-child{border-bottom:none}
+.dish-info{flex:1}
+.dish-name{font-size:14px;font-weight:500}
+.dish-price{font-size:13px;color:var(--text2);margin-top:1px}
+.dish-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.dish-score{font-size:14px;font-weight:600;color:var(--warm)}
+.dish-cnt{font-size:12px;color:var(--text3)}
+.rate-btn{font-size:12px;padding:2px 7px;border-radius:10px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);cursor:pointer;margin-top:1px;font-family:inherit}
+.rate-btn:hover{background:var(--warm-light);border-color:var(--warm-mid);color:var(--warm)}
+.cmt-section{background:var(--bg2);padding:6px 12px 8px;border-top:0.5px solid var(--border)}
+.cmt-item{font-size:13px;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border);display:flex;gap:5px}
+.cmt-item:last-child{border-bottom:none}
+.cmt-stars{color:var(--star-on);font-size:12px;flex-shrink:0}
+.tag{display:inline-block;font-size:11px;padding:1px 5px;border-radius:8px;margin-right:4px;vertical-align:middle}
+.tag-c{background:#FAECE7;color:#993C1D}
+.tag-o{background:#E1F5EE;color:#0F6E56}
+.tag-r{background:#E6F1FB;color:#185FA5}
+.empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:340px;padding:1.1rem;border:0.5px solid var(--border)}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:3px}
+.modal .sub{font-size:13px;color:var(--text2);margin-bottom:.85rem}
+.star-input{display:flex;gap:5px;margin-bottom:.85rem}
+.sp{font-size:26px;cursor:pointer;color:var(--star-off);transition:color .1s;user-select:none}
+.sp.on{color:var(--star-on)}
+.cmt-input{width:100%;border:0.5px solid #d0cdc8;border-radius:8px;padding:7px 9px;font-size:14px;min-height:64px;resize:none;font-family:inherit}
+.cmt-input:focus{outline:none;border-color:var(--warm)}
+.modal-acts{display:flex;gap:8px;margin-top:.65rem;justify-content:flex-end}
+.btn-cancel{font-size:14px;padding:6px 12px;border-radius:8px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);cursor:pointer;font-family:inherit}
+.btn-submit{font-size:14px;padding:6px 12px;border-radius:8px;border:none;background:var(--warm);color:#fff;cursor:pointer;font-weight:600;font-family:inherit}
+.btn-submit:disabled{opacity:.4;cursor:default}
+.lv-count{font-size:12px;color:var(--text3);margin-left:6px;font-weight:400}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>川大吃什么</h1>
+    <p>江安校区 · 食堂档口 & 校外小摊评分</p>
+  </div>
+  <div class="toolbar">
+    <input class="search-input" id="searchInput" placeholder="搜索菜品或档口…"/>
+    <div class="sort-row">
+      <div class="pill active" data-sort="score">按评分</div>
+      <div class="pill" data-sort="count">按评价数</div>
+      <div class="pill" data-sort="price">按均价</div>
+      <button class="dir-btn" id="dirBtn">⇅ <span id="dirLabel">降序</span></button>
+    </div>
+  </div>
+  <div class="content" id="mainContent"></div>
+</div>
+
+<div class="modal-overlay" id="rateModal" style="display:none">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p class="sub" id="modalSub"></p>
+    <div class="star-input" id="starInput">
+      <span class="sp" data-v="1">★</span><span class="sp" data-v="2">★</span>
+      <span class="sp" data-v="3">★</span><span class="sp" data-v="4">★</span><span class="sp" data-v="5">★</span>
+    </div>
+    <textarea class="cmt-input" id="cmtInput" placeholder="写几句评价（可选）"></textarea>
+    <div class="modal-acts">
+      <button class="btn-cancel" id="cancelBtn">取消</button>
+      <button class="btn-submit" id="submitBtn" disabled>提交</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ✏️  数据区 —— 在这里添加/修改档口和菜品
+// 结构：校区 > 分组(校内食堂/校外小摊/附近饭店) > 档口 > 菜品
+//
+// 每个档口字段说明：
+//   id:     唯一英文标识，不能重复（随便起，如 'e3f1'）
+//   name:   显示名称
+//   type:   'c'=食堂  'o'=校外小摊  'r'=附近饭店
+//   dishes: 菜品数组，每项包含 id / name / price
+//
+// 每个菜品字段说明：
+//   id:    唯一英文标识，不能重复（如 'd041'）
+//   name:  菜品名称
+//   price: 价格（数字，单位元）
+// ============================================================
+const DATA = [
+  { campus:'江安校区', groups:[
+    { group:'校内食堂', stalls:[
+      { id:'e1f1', name:'东园食堂 1F · 煮面 & 抄手', type:'c', dishes:[
+        {id:'d001',name:'红油抄手',price:8},
+        {id:'d002',name:'牛肉面',price:12},
+        {id:'d003',name:'素椒杂酱面',price:9}
+      ]},
+      { id:'e1f2', name:'东园食堂 1F · 轻食', type:'c', dishes:[
+        {id:'d004',name:'鸡胸肉沙拉',price:15},
+        {id:'d005',name:'藜麦碗',price:16}
+      ]},
+      { id:'e1f3', name:'东园食堂 1F · 小份菜', type:'c', dishes:[
+        {id:'d006',name:'宫保鸡丁',price:10},
+        {id:'d007',name:'蚝油牛肉',price:12},
+        {id:'d008',name:'干锅鸡',price:11}
+      ]},
+      { id:'e2f1', name:'东园食堂 2F · 煮面', type:'c', dishes:[
+        {id:'d009',name:'担担面',price:10},
+        {id:'d010',name:'番茄鸡蛋面',price:9}
+      ]},
+      { id:'e2f2', name:'东园食堂 2F · 意面', type:'c', dishes:[
+        {id:'d011',name:'黑椒牛肉意面',price:16},
+        {id:'d012',name:'番茄肉酱意面',price:14}
+      ]},
+      { id:'e1f4', name:'东园食堂 1F · 冒菜', type:'c', dishes:[
+        {id:'d013',name:'冒菜（自选）',price:13}
+      ]},
+      { id:'w2f1', name:'西园二餐 2F · 炒饭', type:'c', dishes:[
+        {id:'d014',name:'蛋炒饭',price:8},
+        {id:'d015',name:'腊肉炒饭',price:10}
+      ]},
+      { id:'w2f2', name:'西园二餐 2F · 现炒菜', type:'c', dishes:[
+        {id:'d016',name:'宫爆鸡丁',price:12},
+        {id:'d017',name:'水煮肉片',price:14}
+      ]},
+      { id:'w2f3', name:'西园二餐 2F · 煮面', type:'c', dishes:[
+        {id:'d018',name:'酸辣粉',price:9},
+        {id:'d019',name:'重庆小面',price:8}
+      ]},
+      { id:'p1', name:'美食广场 · 方便面', type:'c', dishes:[
+        {id:'d020',name:'自煮方便面',price:12}
+      ]},
+      { id:'p2', name:'美食广场 · 小火锅', type:'c', dishes:[
+        {id:'d021',name:'麻辣小火锅',price:28},
+        {id:'d022',name:'清汤小火锅',price:25}
+      ]}
+    ]},
+    { group:'校外小摊', stalls:[
+      { id:'o1', name:'南门 · 新疆菜', type:'o', dishes:[
+        {id:'d023',name:'大盘鸡',price:35},
+        {id:'d024',name:'羊肉抓饭',price:18}
+      ]},
+      { id:'o2', name:'南门 · 自选菜盒饭', type:'o', dishes:[
+        {id:'d025',name:'三菜一汤套餐',price:14}
+      ]},
+      { id:'o3', name:'南门 · 油泼面', type:'o', dishes:[
+        {id:'d026',name:'油泼面',price:10},
+        {id:'d027',name:'裤带面',price:11}
+      ]},
+      { id:'o4', name:'南门 · 冰粉', type:'o', dishes:[
+        {id:'d028',name:'红糖冰粉',price:6},
+        {id:'d029',name:'黄糖冰粉',price:6}
+      ]},
+      { id:'o5', name:'南门 · 鸡公煲', type:'o', dishes:[
+        {id:'d030',name:'鸡公煲（中）',price:42}
+      ]},
+      { id:'o6', name:'南门 · 兰州拉面', type:'o', dishes:[
+        {id:'d031',name:'大碗牛肉面',price:16},
+        {id:'d032',name:'小碗牛肉面',price:13}
+      ]},
+      { id:'o7', name:'南门 · 沙县小吃', type:'o', dishes:[
+        {id:'d033',name:'蒸饺',price:8},
+        {id:'d034',name:'拌面',price:7},
+        {id:'d035',name:'炖罐',price:10}
+      ]},
+      { id:'o8', name:'南门 · 铁板套饭', type:'o', dishes:[
+        {id:'d036',name:'铁板牛肉饭',price:15}
+      ]},
+      { id:'o9', name:'小西南门 · 金丝肉夹馍', type:'o', dishes:[
+        {id:'d037',name:'金丝肉夹馍',price:12}
+      ]},
+      { id:'o10', name:'小西南门 · 无敌炒饭', type:'o', dishes:[
+        {id:'d038',name:'无敌炒饭',price:10}
+      ]},
+      { id:'o11', name:'小西南门 · 哈尔滨锅包肉', type:'o', dishes:[
+        {id:'d039',name:'锅包肉',price:16}
+      ]},
+      { id:'o12', name:'小西南门 · 里脊肉饼', type:'o', dishes:[
+        {id:'d040',name:'里脊肉饼',price:9}
+      ]}
+    ]}
+    // 如需添加"附近饭店"分组，在此处继续添加：
+    // ,{ group:'附近饭店', stalls:[ ... ] }
+  ]}
+  // 如需添加其他校区，在此处继续添加：
+  // ,{ campus:'望江校区', groups:[ ... ] }
+];
+// ============================================================
+// ✏️  数据区结束
+// ============================================================
+
+// ============================================================
+// Supabase 配置
+// ============================================================
+const SUPABASE_URL = 'https://gksdoffareriorjmnsec.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdrc2RvZmZhcmVyaW9yam1uc2VjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODY4OTgsImV4cCI6MjA5NTI2Mjg5OH0.risJYvgJISDv_bKwjL75xZmZ1ILGRWRccngMFIlOCDk';
+
+const api = (path, opts={}) => fetch(SUPABASE_URL + '/rest/v1/' + path, {
+  headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+  ...opts
+});
+
+// ratings: { dish_id -> { sum, n, comments:[{s,t}] } }
+let ratings = {};
+let openCampus = new Set(['江安校区']);
+let openGroups = new Set();
+let openStalls = new Set();
+let sortMode = 'score';
+let sortDir = -1;
+let searchQ = '';
+let modalDishId = null;
+let pickedStar = 0;
+let loading = true;
+
+// 从 Supabase 拉取所有评分，聚合到 ratings 对象
+async function loadRatings() {
+  try {
+    const res = await api('ratings?select=dish_id,score,comment&order=created_at.asc');
+    const rows = await res.json();
+    ratings = {};
+    rows.forEach(row => {
+      if (!ratings[row.dish_id]) ratings[row.dish_id] = { sum: 0, n: 0, comments: [] };
+      ratings[row.dish_id].sum += row.score;
+      ratings[row.dish_id].n += 1;
+      if (row.comment) ratings[row.dish_id].comments.push({ s: row.score, t: row.comment });
+    });
+  } catch(e) {
+    console.error('加载评分失败', e);
+  }
+  loading = false;
+  render();
+}
+
+async function submitRating(dishId, score, comment) {
+  await api('ratings', {
+    method: 'POST',
+    body: JSON.stringify({ dish_id: dishId, score, comment: comment || null })
+  });
+  // 本地立刻更新，不等重新拉取
+  if (!ratings[dishId]) ratings[dishId] = { sum: 0, n: 0, comments: [] };
+  ratings[dishId].sum += score;
+  ratings[dishId].n += 1;
+  if (comment) ratings[dishId].comments.push({ s: score, t: comment });
+}
+
+function getDishScore(id){const r=ratings[id];return r&&r.n>0?r.sum/r.n:null}
+function getDishCount(id){return ratings[id]?.n||0}
+function getStallAvgPrice(stall){const p=stall.dishes.map(d=>d.price);return p.reduce((a,b)=>a+b,0)/p.length}
+function getStallScore(stall){const s=stall.dishes.map(d=>getDishScore(d.id)).filter(x=>x!==null);return s.length?s.reduce((a,b)=>a+b,0)/s.length:null}
+function getStallCount(stall){return stall.dishes.reduce((a,d)=>a+getDishCount(d.id),0)}
+
+function sortStalls(stalls){
+  return stalls.slice().sort((a,b)=>{
+    let va,vb;
+    if(sortMode==='score'){va=getStallScore(a)||0;vb=getStallScore(b)||0}
+    else if(sortMode==='count'){va=getStallCount(a);vb=getStallCount(b)}
+    else{va=getStallAvgPrice(a);vb=getStallAvgPrice(b)}
+    return sortDir===1?va-vb:vb-va;
+  });
+}
+
+function stars(score,size){
+  const cls=size==='m'?'ms':'s';
+  return Array.from({length:5},(_,i)=>`<span class="${cls}${score&&i<Math.round(score)?' on':''}">★</span>`).join('');
+}
+function tagHtml(type){
+  if(type==='c')return'<span class="tag tag-c">食堂</span>';
+  if(type==='o')return'<span class="tag tag-o">校外</span>';
+  return'<span class="tag tag-r">饭店</span>';
+}
+
+function renderDishes(stall){
+  let dishes=stall.dishes;
+  if(searchQ){const q=searchQ.toLowerCase();dishes=dishes.filter(d=>d.name.toLowerCase().includes(q)||d.name.includes(searchQ))}
+  return dishes.map(d=>{
+    const s=getDishScore(d.id);
+    const r=ratings[d.id];
+    const cmts=r?.comments?.length?`<div class="cmt-section">${r.comments.slice(-3).map(c=>`<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span>${c.t}</div>`).join('')}</div>`:'';
+    return`<div><div class="dish-row"><div class="dish-info"><div class="dish-name">${d.name}</div><div class="dish-price">¥${d.price}</div></div><div class="dish-right">${s!==null?`<span class="dish-score">${s.toFixed(1)}</span><div class="stars">${stars(s,'m')}</div><span class="dish-cnt">${r.n}条评价</span>`:'<span class="dish-cnt">暂无评分</span>'}<button class="rate-btn" onclick="openModal('${d.id}','${d.name}','${stall.name}')">打分</button></div></div>${cmts}</div>`;
+  }).join('');
+}
+
+function renderStall(stall){
+  const avg=getStallScore(stall);
+  const total=getStallCount(stall);
+  const isOpen=openStalls.has(stall.id);
+  const avgPrice=getStallAvgPrice(stall).toFixed(1);
+  return`<div class="lv3-block"><div class="stall-card"><div class="stall-hdr" onclick="toggleStall('${stall.id}')"><div><div class="stall-name">${tagHtml(stall.type)}${stall.name}</div><div class="stall-meta">均价¥${avgPrice} · ${total>0?total+'条评价':'暂无评价'}</div></div><div class="score-chip">${avg!==null?`<span class="score-num">${avg.toFixed(1)}</span><div class="stars">${stars(avg)}</div>`:'<span style="font-size:11px;color:var(--text3)">待评分</span>'}<span class="chev${isOpen?' open':''}">⌄</span></div></div>${isOpen?`<div class="dishes">${renderDishes(stall)}</div>`:''}</div></div>`;
+}
+
+function render(){
+  const el=document.getElementById('mainContent');
+  if(loading){el.innerHTML='<div class="empty">加载中…</div>';return}
+  const q=searchQ.toLowerCase();
+  let html='';let anyVisible=false;
+  DATA.forEach(campus=>{
+    const isCampusOpen=openCampus.has(campus.campus);
+    let groupsHtml='';
+    campus.groups.forEach(group=>{
+      const groupKey='group_'+campus.campus+'_'+group.group;
+      const isGroupOpen=openGroups.has(groupKey);
+      let stalls=sortStalls(group.stalls);
+      if(q){stalls=stalls.filter(s=>s.name.toLowerCase().includes(q)||s.name.includes(searchQ)||s.dishes.some(d=>d.name.toLowerCase().includes(q)||d.name.includes(searchQ)))}
+      if(!stalls.length)return;
+      anyVisible=true;
+      groupsHtml+=`<div class="lv2-block"><div class="lv-row lv2-row" onclick="toggleGroup('${groupKey}')"><span>${group.group}<span class="lv-count">${stalls.length}个档口</span></span><span class="chev${isCampusOpen&&isGroupOpen?' open':''}">⌄</span></div>${isCampusOpen&&isGroupOpen?stalls.map(s=>renderStall(s)).join(''):''}</div>`;
+    });
+    if(!groupsHtml)return;
+    html+=`<div class="lv1-block"><div class="lv-row lv1-row" onclick="toggleCampus('${campus.campus}')"><span>${campus.campus}</span><span class="chev${isCampusOpen?' open':''}">⌄</span></div>${isCampusOpen?groupsHtml:''}</div>`;
+  });
+  el.innerHTML=anyVisible?html:'<div class="empty">没有找到相关档口或菜品</div>';
+}
+
+function toggleCampus(name){if(openCampus.has(name))openCampus.delete(name);else openCampus.add(name);render()}
+function toggleGroup(key){if(openGroups.has(key))openGroups.delete(key);else openGroups.add(key);render()}
+function toggleStall(id){if(openStalls.has(id))openStalls.delete(id);else openStalls.add(id);render()}
+
+function openModal(dishId,dishName,stallName){
+  modalDishId=dishId;pickedStar=0;
+  document.getElementById('modalTitle').textContent=dishName;
+  document.getElementById('modalSub').textContent=stallName;
+  document.getElementById('cmtInput').value='';
+  document.getElementById('submitBtn').disabled=true;
+  document.querySelectorAll('.sp').forEach(s=>s.classList.remove('on'));
+  document.getElementById('rateModal').style.display='flex';
+}
+document.getElementById('cancelBtn').onclick=()=>{document.getElementById('rateModal').style.display='none'};
+document.getElementById('rateModal').onclick=e=>{if(e.target===document.getElementById('rateModal'))document.getElementById('rateModal').style.display='none'};
+document.querySelectorAll('.sp').forEach(star=>{
+  star.onclick=()=>{
+    pickedStar=parseInt(star.dataset.v);
+    document.querySelectorAll('.sp').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=pickedStar));
+    document.getElementById('submitBtn').disabled=false;
+  };
+});
+document.getElementById('submitBtn').onclick=async()=>{
+  if(!pickedStar||!modalDishId)return;
+  const cmt=document.getElementById('cmtInput').value.trim();
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='提交中…';
+  await submitRating(modalDishId, pickedStar, cmt);
+  btn.textContent='提交';
+  document.getElementById('rateModal').style.display='none';
+  render();
+};
+document.querySelectorAll('.pill').forEach(p=>{
+  p.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');sortMode=p.dataset.sort;render()};
+});
+document.getElementById('dirBtn').onclick=()=>{sortDir*=-1;document.getElementById('dirLabel').textContent=sortDir===1?'升序':'降序';render()};
+document.getElementById('searchInput').oninput=e=>{searchQ=e.target.value.trim();render()};
+render(); // 先显示loading
+loadRatings(); // 拉取数据后重新渲染
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>川大吃什么 · 投稿审核</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f4f1;color:#1a1a1a;min-height:100vh}
+:root{--warm:#E0552D;--warm-light:#FDF0EA;--green:#0F6E56;--green-light:#E1F5EE;--bg:#f5f4f1;--card:#fff;--border:#e8e5e0;--text2:#6b6860;--text3:#9e9b96}
+.app{max-width:600px;margin:0 auto;padding:1.5rem 1rem}
+
+/* Login Gate */
+.gate{background:var(--card);border-radius:16px;padding:2rem 1.5rem;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-top:2rem}
+.gate h2{font-size:20px;margin-bottom:6px}
+.gate p{font-size:14px;color:var(--text2);margin-bottom:1rem}
+.gate input{width:100%;padding:9px 14px;border:0.5px solid #d0cdc8;border-radius:10px;font-size:16px;font-family:inherit;text-align:center;letter-spacing:2px}
+.gate input:focus{outline:none;border-color:var(--warm)}
+.gate .btn{margin-top:10px;padding:9px 24px;border-radius:10px;border:none;background:var(--warm);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.gate .err{color:var(--warm);font-size:13px;margin-top:8px}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.header h1{font-size:20px}
+.header .badge{font-size:12px;background:var(--warm-light);color:var(--warm);padding:3px 10px;border-radius:12px;font-weight:500}
+.btn-logout{font-size:13px;background:none;border:0.5px solid #d0cdc8;padding:5px 12px;border-radius:8px;cursor:pointer;color:var(--text2);font-family:inherit}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;margin-bottom:1rem}
+.tab{padding:6px 14px;border-radius:20px;font-size:13px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);cursor:pointer;font-family:inherit}
+.tab.active{background:var(--warm);border-color:var(--warm);color:#fff}
+
+/* Cards */
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--card);border-radius:12px;padding:14px;border:0.5px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .2s}
+.card:hover{box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.card .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card .info{flex:1;min-width:150px}
+.card .name{font-size:15px;font-weight:600}
+.card .meta{font-size:12px;color:var(--text3);margin-top:3px}
+.card .meta span{margin-right:10px}
+.card .price{font-size:14px;font-weight:600;color:var(--warm)}
+.card .img-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;border:0.5px solid var(--border);flex-shrink:0}
+.card .actions{display:flex;gap:6px;flex-shrink:0}
+.card .btn-approve{padding:6px 14px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.card .btn-approve:hover{opacity:.9}
+.card .btn-reject{padding:6px 14px;border-radius:8px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit}
+.card .btn-reject:hover{background:#f5f5f5}
+.card .status{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:500}
+.card .status.pending{background:#FFF8E1;color:#B8780A}
+.card .status.approved{background:var(--green-light);color:var(--green)}
+.card .status.rejected{background:#FFEBEE;color:#C62828}
+.card .timestamp{font-size:11px;color:var(--text3);margin-top:6px}
+
+.empty{text-align:center;padding:2rem;color:var(--text3);font-size:14px}
+.loading{text-align:center;padding:2rem;color:var(--text3)}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;z-index:100;opacity:0;transition:opacity .25s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- Login Gate -->
+  <div class="gate" id="gate">
+    <h2>🔐 投稿审核后台</h2>
+    <p>输入管理密码进入</p>
+    <input type="password" id="pwdInput" placeholder="输入密码" autofocus/>
+    <br/><button class="btn" id="loginBtn">进入</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <!-- Main Panel -->
+  <div id="panel" style="display:none">
+    <div class="header">
+      <div><h1>📋 投稿审核</h1></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="badge" id="pendingBadge"></span>
+        <button class="btn-logout" id="logoutBtn">退出</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="pending">待审核</button>
+      <button class="tab" data-tab="approved">已通过</button>
+      <button class="tab" data-tab="rejected">已拒绝</button>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 配置（与主站共用 Supabase）
+// ============================================================
+const SUPABASE_URL = 'https://gksdoffareriorjmnsec.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdrc2RvZmZhcmVyaW9yam1uc2VjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODY4OTgsImV4cCI6MjA5NTI2Mjg5OH0.risJYvgJISDv_bKwjL75xZmZ1ILGRWRccngMFIlOCDk';
+
+// ⚠️ 请修改为你自己的管理密码
+const ADMIN_PASSWORD = 'scu2024admin';
+
+const api = (path, opts={}) => fetch(SUPABASE_URL + '/rest/v1/' + path, {
+  headers: {
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  },
+  ...opts
+});
+
+let currentTab = 'pending';
+let submissions = [];
+
+// ============================================================
+// Toast
+// ============================================================
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// Auth
+// ============================================================
+function checkAuth() {
+  return sessionStorage.getItem('scu_food_admin') === '1';
+}
+
+document.getElementById('loginBtn').onclick = () => {
+  const pwd = document.getElementById('pwdInput').value;
+  if (pwd === ADMIN_PASSWORD) {
+    sessionStorage.setItem('scu_food_admin', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+    loadSubmissions();
+  } else {
+    document.getElementById('loginErr').textContent = '密码错误';
+  }
+};
+
+document.getElementById('pwdInput').onkeydown = e => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+};
+
+document.getElementById('logoutBtn').onclick = () => {
+  sessionStorage.removeItem('scu_food_admin');
+  location.reload();
+};
+
+// Auto login if already authed
+if (checkAuth()) {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('panel').style.display = 'block';
+  loadSubmissions();
+}
+
+// ============================================================
+// Load
+// ============================================================
+async function loadSubmissions() {
+  if (!checkAuth()) return;
+  document.getElementById('list').innerHTML = '<div class="loading">加载中…</div>';
+  try {
+    const res = await api('submissions?order=created_at.desc');
+    submissions = await res.json();
+    render();
+  } catch(e) {
+    document.getElementById('list').innerHTML = '<div class="empty">加载失败，请检查网络或 Supabase 连接</div>';
+    console.error(e);
+  }
+}
+
+// ============================================================
+// Render
+// ============================================================
+function render() {
+  const filtered = submissions.filter(s => s.status === currentTab);
+  const el = document.getElementById('list');
+  const badge = document.getElementById('pendingBadge');
+  const pending = submissions.filter(s => s.status === 'pending');
+  badge.textContent = pending.length + ' 条待审';
+
+  if (!filtered.length) {
+    const labels = { pending: '没有待审核的投稿', approved: '还没有已通过的投稿', rejected: '没有被拒绝的投稿' };
+    el.innerHTML = '<div class="empty">' + labels[currentTab] + '</div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(s => {
+    const statusLabels = { pending: '待审核', approved: '已通过', rejected: '已拒绝' };
+    const time = new Date(s.created_at).toLocaleString('zh-CN');
+    const imgHtml = s.image_url
+      ? `<img class="img-thumb" src="${s.image_url}" alt="" onerror="this.style.display='none'"/>`
+      : '';
+
+    let actionHtml = '';
+    if (s.status === 'pending') {
+      actionHtml = `
+        <button class="btn-approve" onclick="updateStatus(${s.id},'approved')">✓ 通过</button>
+        <button class="btn-reject" onclick="updateStatus(${s.id},'rejected')">✕ 拒绝</button>
+      `;
+    } else if (s.status === 'approved') {
+      actionHtml = `<button class="btn-reject" onclick="updateStatus(${s.id},'rejected')">撤销</button>`;
+    } else {
+      actionHtml = `<button class="btn-approve" onclick="updateStatus(${s.id},'approved')">恢复</button>`;
+    }
+
+    return `
+      <div class="card">
+        <div class="row">
+          ${imgHtml}
+          <div class="info">
+            <div class="name">
+              ${escHtml(s.dish_name)}
+              <span class="status ${s.status}">${statusLabels[s.status]}</span>
+            </div>
+            <div class="meta">
+              <span>🏠 ${escHtml(s.stall_name || '—')}</span>
+              <span>📁 ${escHtml(s.group_name || '—')}</span>
+              <span>${s.type === 'stall' ? '新档口' : '新菜品'}</span>
+            </div>
+            <div class="meta">📅 ${time}</div>
+          </div>
+          <div class="price">¥${s.price}</div>
+        </div>
+        <div style="margin-top:8px">${actionHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+// ============================================================
+// Update Status
+// ============================================================
+async function updateStatus(id, status) {
+  if (!checkAuth()) return;
+  try {
+    await api('submissions?id=eq.' + id, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
+    });
+    showToast(status === 'approved' ? '已通过 ✅' : '已拒绝');
+    await loadSubmissions();
+  } catch(e) {
+    showToast('操作失败，请检查 Supabase RLS 配置');
+    console.error(e);
+  }
+}
+
+// ============================================================
+// Tabs
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    render();
+  };
+});
+
+// ============================================================
+// Keyboard
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && checkAuth()) {
+    document.getElementById('logoutBtn').click();
+  }
+});
+</script>
+</body>
+</html>

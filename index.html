@@ -2,100 +2,472 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>川大吃什么</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>川大吃什么 — 江安校区美食评分</title>
 <style>
+/* ============================================================
+   CSS Variables & Reset
+   ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:#faf9f7;color:#1a1a1a;min-height:100vh}
-:root{--warm:#D85A30;--warm-light:#FAECE7;--warm-mid:#F0997B;--star-on:#EF9F27;--star-off:#D3D1C7;--border:#e8e5e0;--bg2:#f3f1ee;--text2:#6b6860;--text3:#9e9b96}
-.app{max-width:680px;margin:0 auto;background:#fff;min-height:100vh;border-left:0.5px solid var(--border);border-right:0.5px solid var(--border)}
-.header{padding:1.1rem 1rem 0.65rem;border-bottom:0.5px solid var(--border)}
-.header h1{font-size:24px;font-weight:600;letter-spacing:-0.3px}
-.header p{font-size:14px;color:var(--text2);margin-top:2px}
-.toolbar{padding:0.6rem 1rem;border-bottom:0.5px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.search-input{flex:1;min-width:120px;border:0.5px solid #d0cdc8;border-radius:20px;padding:5px 12px;font-size:14px;background:#f3f1ee;font-family:inherit}
-.search-input:focus{outline:none;border-color:var(--warm);background:#fff}
-.sort-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.pill{font-size:13px;padding:3px 9px;border-radius:20px;border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
-.pill:hover{background:var(--bg2)}
-.pill.active{background:var(--warm);border-color:var(--warm);color:#fff}
-.dir-btn{font-size:13px;padding:3px 8px;border-radius:20px;border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:3px}
+:root{
+  --warm:#E0552D;
+  --warm-dark:#B8401E;
+  --warm-light:#FDF0EA;
+  --warm-mid:#F0997B;
+  --star-on:#F5A623;
+  --star-off:#D3D1C7;
+  --border:#E8E5E0;
+  --bg1:#FAF9F7;
+  --bg2:#F4F2EF;
+  --bg3:#EDEBE7;
+  --text1:#1A1A1A;
+  --text2:#6B6860;
+  --text3:#9E9B96;
+  --green:#0F6E56;
+  --green-light:#E1F5EE;
+  --blue:#185FA5;
+  --blue-light:#E6F1FB;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --radius-sm:8px;
+  --radius:12px;
+  --radius-lg:18px;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  background:var(--bg1);
+  color:var(--text1);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:680px;margin:0 auto;background:#fff;min-height:100vh;border-left:0.5px solid var(--border);border-right:0.5px solid var(--border);position:relative;overflow:hidden}
+
+/* ============================================================
+   Hero Header
+   ============================================================ */
+.hero{
+  background:linear-gradient(135deg,#FFF7F0 0%,#FFF0E5 25%,#FDE8D7 50%,#FFF5EE 100%);
+  padding:1.4rem 1.2rem 0.9rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-40px;right:-30px;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(224,85,45,.08) 0%,transparent 70%);
+  border-radius:50%;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-20px;left:60%;width:80px;height:80px;
+  background:radial-gradient(circle,rgba(245,166,35,.1) 0%,transparent 70%);
+  border-radius:50%;
+}
+.hero h1{
+  font-size:26px;font-weight:700;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,var(--warm-dark),var(--warm));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  position:relative;z-index:1;
+}
+.hero .subtitle{
+  font-size:14px;color:var(--text2);margin-top:4px;position:relative;z-index:1;
+}
+.hero .subtitle span{color:var(--warm);font-weight:500}
+
+/* ============================================================
+   Stats Bar
+   ============================================================ */
+.stats-bar{
+  display:flex;gap:0;padding:0.55rem 0.8rem;
+  border-bottom:0.5px solid var(--border);
+  background:#fff;
+}
+.stat-item{
+  flex:1;text-align:center;padding:4px 0;border-radius:var(--radius-sm);
+  transition:background .15s;
+}
+.stat-item:hover{background:var(--bg2)}
+.stat-num{font-size:18px;font-weight:700;color:var(--warm);line-height:1.2}
+.stat-label{font-size:11px;color:var(--text3);margin-top:1px}
+.stat-icon{font-size:13px;margin-right:1px}
+
+/* ============================================================
+   Leaderboard
+   ============================================================ */
+.leaderboard{
+  padding:0.55rem 0.8rem 0.4rem;
+  border-bottom:0.5px solid var(--border);
+  background:#fff;
+}
+.lb-title{
+  font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;
+  display:flex;align-items:center;gap:5px;text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.lb-title .icon{font-size:14px}
+.lb-grid{display:flex;gap:6px;margin-bottom:6px}
+.lb-card{
+  flex:1;background:var(--bg2);border-radius:var(--radius-sm);padding:7px 9px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+  min-width:0;
+}
+.lb-card:hover{background:var(--warm-light);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.lb-card .rank-badge{
+  position:absolute;top:0;right:0;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
+  border-radius:0 var(--radius-sm) 0 var(--radius-sm);
+}
+.lb-card .rank-badge.gold{background:linear-gradient(135deg,#F5A623,#E8961A)}
+.lb-card .rank-badge.silver{background:linear-gradient(135deg,#B0AAA2,#9E9890)}
+.lb-card .rank-badge.bronze{background:linear-gradient(135deg,#E0895E,#D07048)}
+.lb-card .lb-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:18px}
+.lb-card .lb-stall{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.lb-card .lb-val{font-size:12px;font-weight:600;color:var(--warm);margin-top:2px}
+.lb-empty{font-size:12px;color:var(--text3);padding:4px 0}
+
+/* ============================================================
+   Toolbar
+   ============================================================ */
+.toolbar{
+  padding:0.55rem 0.8rem;border-bottom:0.5px solid var(--border);
+  display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+  background:#fff;position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(8px);
+}
+.search-wrap{
+  flex:1;min-width:120px;position:relative;
+}
+.search-wrap .search-icon{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  font-size:13px;color:var(--text3);pointer-events:none;
+}
+.search-input{
+  width:100%;border:0.5px solid #d0cdc8;border-radius:20px;
+  padding:6px 10px 6px 28px;font-size:13px;
+  background:var(--bg2);font-family:inherit;
+  transition:all .2s;
+}
+.search-input:focus{outline:none;border-color:var(--warm);background:#fff;box-shadow:0 0 0 3px rgba(224,85,45,.08)}
+.search-input::placeholder{color:var(--text3)}
+.btn-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pill{
+  font-size:12px;padding:4px 10px;border-radius:20px;
+  border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);
+  cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;
+  font-family:inherit;
+}
+.pill:hover{background:var(--bg2);border-color:var(--text3)}
+.pill.active{background:var(--warm);border-color:var(--warm);color:#fff;box-shadow:0 2px 8px rgba(224,85,45,.25)}
+.dir-btn{
+  font-size:12px;padding:4px 9px;border-radius:20px;
+  border:0.5px solid #d0cdc8;background:#fff;color:var(--text2);
+  cursor:pointer;display:flex;align-items:center;gap:2px;
+  user-select:none;font-family:inherit;transition:all .15s;
+}
 .dir-btn:hover{background:var(--bg2)}
-.content{padding:0.6rem 1rem}
-.lv1-block{margin-bottom:10px}
-.lv-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:7px 10px;border-radius:8px;user-select:none}
+.btn-primary{
+  font-size:12px;padding:5px 12px;border-radius:20px;
+  border:none;cursor:pointer;white-space:nowrap;font-weight:500;
+  font-family:inherit;transition:all .2s;
+  display:flex;align-items:center;gap:4px;
+}
+.btn-random{
+  background:var(--warm);color:#fff;
+  box-shadow:0 2px 8px rgba(224,85,45,.25);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 2px 8px rgba(224,85,45,.25)}
+  50%{box-shadow:0 4px 16px rgba(224,85,45,.4)}
+}
+.btn-random:hover{background:var(--warm-dark);transform:scale(1.03)}
+.btn-submit-new{
+  background:var(--bg2);color:var(--text2);border:0.5px dashed var(--border);
+}
+.btn-submit-new:hover{background:var(--warm-light);border-color:var(--warm-mid);color:var(--warm)}
+
+/* ============================================================
+   Content / Tree
+   ============================================================ */
+.content{padding:0.4rem 0.8rem 0.8rem}
+.lv1-block{margin-bottom:8px;animation:fadeIn .3s ease}
+.lv1-block:last-child{margin-bottom:0}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.lv-row{
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:7px 10px;border-radius:var(--radius-sm);
+  user-select:none;transition:all .15s;
+}
 .lv-row:hover{background:var(--bg2)}
-.lv1-row{background:var(--bg2);border-radius:8px;font-size:15px;font-weight:600}
-.lv2-block{margin:4px 0 4px 10px;border-left:1.5px solid var(--border);padding-left:8px}
+.lv1-row{
+  background:var(--bg2);border-radius:var(--radius-sm);
+  font-size:15px;font-weight:600;
+}
+.lv2-block{margin:4px 0 4px 10px;border-left:2px solid var(--border);padding-left:10px}
 .lv2-row{font-size:14px;font-weight:500;color:var(--text2)}
-.lv3-block{margin:3px 0 3px 8px;border-left:1px solid var(--border);padding-left:8px}
-.stall-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
-.stall-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;cursor:pointer}
+.lv3-block{margin:3px 0 3px 8px;border-left:1.5px solid var(--border);padding-left:8px}
+
+/* ============================================================
+   Stall Card
+   ============================================================ */
+.stall-card{
+  background:#fff;border:0.5px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;transition:all .2s;box-shadow:var(--shadow-sm);
+}
+.stall-card:hover{box-shadow:var(--shadow-md)}
+.stall-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 11px;cursor:pointer;transition:background .15s;
+}
 .stall-hdr:hover{background:var(--bg2)}
-.stall-name{font-size:15px;font-weight:500}
-.stall-meta{font-size:13px;color:var(--text3);margin-top:1px}
-.score-chip{display:flex;align-items:center;gap:5px}
-.score-num{font-size:16px;font-weight:600;color:var(--warm)}
+.stall-name{font-size:15px;font-weight:500;display:flex;align-items:center;gap:5px}
+
+.stall-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.score-chip{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.score-num{font-size:17px;font-weight:700;color:var(--warm)}
 .stars{display:flex;gap:1px}
 .s{font-size:13px;color:var(--star-off)}.s.on{color:var(--star-on)}
 .ms{font-size:11px;color:var(--star-off)}.ms.on{color:var(--star-on)}
-.chev{font-size:13px;color:var(--text3);transition:transform .2s;display:inline-block}
+.chev{font-size:12px;color:var(--text3);transition:transform .25s;display:inline-block}
 .chev.open{transform:rotate(180deg)}
-.dishes{border-top:0.5px solid var(--border)}
-.dish-row{padding:8px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;gap:8px}
+
+/* ============================================================
+   Dish Area
+   ============================================================ */
+.dishes{border-top:0.5px solid var(--border);background:var(--bg1)}
+.dish-row{
+  padding:9px 11px;border-bottom:0.5px solid var(--border);
+  display:flex;align-items:flex-start;gap:10px;
+  transition:background .2s;
+}
 .dish-row:last-child{border-bottom:none}
-.dish-info{flex:1}
+.dish-row:hover{background:#fff}
+.dish-row.highlight{background:var(--warm-light);animation:highlightFade 2s ease forwards}
+@keyframes highlightFade{0%{background:var(--warm-light)}100%{background:transparent}}
+.dish-img{
+  width:64px;height:64px;border-radius:var(--radius-sm);
+  object-fit:cover;flex-shrink:0;background:var(--bg3);
+  border:0.5px solid var(--border);
+}
+.dish-img-upload{
+  width:64px;height:64px;border-radius:var(--radius-sm);
+  flex-shrink:0;background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;border:0.5px dashed var(--border);
+  cursor:pointer;transition:all .15s;color:var(--text3);
+}
+.dish-img-upload:hover{background:var(--warm-light);border-color:var(--warm-mid);color:var(--warm)}
+.dish-img-preview{width:80px;height:80px;border-radius:var(--radius-sm);object-fit:cover;border:0.5px solid var(--border)}
+.upload-status{font-size:11px;color:var(--text3);margin-top:4px}
+.upload-status.success{color:var(--green)}
+.upload-status.error{color:var(--warm)}
+.dish-info{flex:1;min-width:0}
 .dish-name{font-size:14px;font-weight:500}
-.dish-price{font-size:13px;color:var(--text2);margin-top:1px}
-.dish-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.dish-price{font-size:12px;color:var(--text2);margin-top:2px}
+.dish-price .unit{font-size:11px;color:var(--text3)}
+.dish-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
 .dish-score{font-size:14px;font-weight:600;color:var(--warm)}
-.dish-cnt{font-size:12px;color:var(--text3)}
-.rate-btn{font-size:12px;padding:2px 7px;border-radius:10px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);cursor:pointer;margin-top:1px;font-family:inherit}
+.dish-cnt{font-size:11px;color:var(--text3)}
+.rate-btn{
+  font-size:11px;padding:3px 8px;border-radius:12px;
+  border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);
+  cursor:pointer;margin-top:1px;font-family:inherit;transition:all .15s;
+}
 .rate-btn:hover{background:var(--warm-light);border-color:var(--warm-mid);color:var(--warm)}
-.cmt-section{background:var(--bg2);padding:6px 12px 8px;border-top:0.5px solid var(--border)}
-.cmt-item{font-size:13px;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border);display:flex;gap:5px}
+.rate-btn.done{background:var(--green-light);border-color:var(--green);color:var(--green);cursor:default}
+
+/* ============================================================
+   Comments
+   ============================================================ */
+.cmt-section{background:var(--bg2);padding:6px 11px 8px;border-top:0.5px solid var(--border)}
+.cmt-item{
+  font-size:12px;color:var(--text2);padding:3px 0;
+  border-bottom:0.5px solid var(--border);
+  display:flex;gap:6px;line-height:1.5;
+}
 .cmt-item:last-child{border-bottom:none}
-.cmt-stars{color:var(--star-on);font-size:12px;flex-shrink:0}
-.tag{display:inline-block;font-size:11px;padding:1px 5px;border-radius:8px;margin-right:4px;vertical-align:middle}
+.cmt-stars{color:var(--star-on);font-size:11px;flex-shrink:0}
+.cmt-text{word-break:break-word}
+.cmt-toggle{
+  font-size:12px;color:var(--warm);cursor:pointer;padding:4px 0 0;
+  user-select:none;font-weight:500;
+}
+.cmt-toggle:hover{opacity:.8}
+
+/* ============================================================
+   Tags
+   ============================================================ */
+.tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;letter-spacing:0.3px}
 .tag-c{background:#FAECE7;color:#993C1D}
 .tag-o{background:#E1F5EE;color:#0F6E56}
 .tag-r{background:#E6F1FB;color:#185FA5}
-.empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
-.modal{background:#fff;border-radius:12px;width:100%;max-width:340px;padding:1.1rem;border:0.5px solid var(--border)}
-.modal h3{font-size:16px;font-weight:600;margin-bottom:3px}
-.modal .sub{font-size:13px;color:var(--text2);margin-bottom:.85rem}
-.star-input{display:flex;gap:5px;margin-bottom:.85rem}
-.sp{font-size:26px;cursor:pointer;color:var(--star-off);transition:color .1s;user-select:none}
+.tag-approved{background:#FFF3DC;color:#B8780A;font-size:10px;padding:1px 6px;border-radius:8px}
+
+/* ============================================================
+   Modals
+   ============================================================ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;z-index:100;
+  padding:1rem;animation:fadeIn .2s ease;
+  backdrop-filter:blur(2px);
+}
+.modal{
+  background:#fff;border-radius:var(--radius-lg);width:100%;max-width:360px;
+  padding:1.3rem 1.2rem;box-shadow:var(--shadow-lg);
+  animation:slideUp .25s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal h3{font-size:17px;font-weight:600;margin-bottom:3px}
+.modal .sub{font-size:13px;color:var(--text2);margin-bottom:1rem}
+.modal .form-group{margin-bottom:0.8rem}
+.modal .form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px;display:block}
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="url"],
+.modal select,
+.modal textarea{
+  width:100%;border:0.5px solid #d0cdc8;border-radius:var(--radius-sm);
+  padding:7px 10px;font-size:14px;font-family:inherit;
+  transition:border-color .15s;background:var(--bg2);
+}
+.modal input:focus,.modal select:focus,.modal textarea:focus{
+  outline:none;border-color:var(--warm);background:#fff;box-shadow:0 0 0 3px rgba(224,85,45,.06)
+}
+.modal select{appearance:none;cursor:pointer}
+.modal textarea{min-height:70px;resize:vertical}
+.star-input{display:flex;gap:6px;margin-bottom:.85rem}
+.sp{font-size:30px;cursor:pointer;color:var(--star-off);transition:all .12s;user-select:none}
+.sp:hover{transform:scale(1.15)}
 .sp.on{color:var(--star-on)}
-.cmt-input{width:100%;border:0.5px solid #d0cdc8;border-radius:8px;padding:7px 9px;font-size:14px;min-height:64px;resize:none;font-family:inherit}
-.cmt-input:focus{outline:none;border-color:var(--warm)}
-.modal-acts{display:flex;gap:8px;margin-top:.65rem;justify-content:flex-end}
-.btn-cancel{font-size:14px;padding:6px 12px;border-radius:8px;border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);cursor:pointer;font-family:inherit}
-.btn-submit{font-size:14px;padding:6px 12px;border-radius:8px;border:none;background:var(--warm);color:#fff;cursor:pointer;font-weight:600;font-family:inherit}
+.modal-acts{display:flex;gap:8px;margin-top:.75rem;justify-content:flex-end}
+.btn-cancel{
+  font-size:14px;padding:7px 14px;border-radius:var(--radius-sm);
+  border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);
+  cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.btn-cancel:hover{background:var(--bg2)}
+.btn-submit{
+  font-size:14px;padding:7px 18px;border-radius:var(--radius-sm);
+  border:none;background:var(--warm);color:#fff;cursor:pointer;
+  font-weight:600;font-family:inherit;transition:all .15s;
+}
+.btn-submit:hover{background:var(--warm-dark);box-shadow:0 2px 8px rgba(224,85,45,.3)}
 .btn-submit:disabled{opacity:.4;cursor:default}
-.lv-count{font-size:12px;color:var(--text3);margin-left:6px;font-weight:400}
+
+/* ============================================================
+   Random Pick Modal
+   ============================================================ */
+.pick-result{text-align:center;padding:0.5rem 0}
+.pick-result .emoji{font-size:52px;margin-bottom:6px;animation:bounce .6s ease}
+@keyframes bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}60%{transform:translateY(-4px)}}
+.pick-result .name{font-size:19px;font-weight:600;margin-bottom:2px}
+.pick-result .stall{font-size:13px;color:var(--text2);margin-bottom:4px}
+.pick-result .price{font-size:15px;color:var(--warm);font-weight:600;margin-bottom:8px}
+.pick-result .score-row{display:inline-flex;align-items:center;gap:6px;margin-bottom:14px}
+.pick-img{width:140px;height:140px;border-radius:var(--radius);object-fit:cover;margin-bottom:8px;box-shadow:var(--shadow-sm)}
+.btn-row{display:flex;gap:8px;justify-content:center}
+.btn-again{
+  font-size:14px;padding:8px 20px;border-radius:20px;border:none;
+  background:var(--warm);color:#fff;cursor:pointer;font-weight:500;
+  font-family:inherit;transition:all .15s;
+}
+.btn-again:hover{background:var(--warm-dark)}
+.btn-close-pick{
+  font-size:14px;padding:8px 16px;border-radius:20px;
+  border:0.5px solid #d0cdc8;background:transparent;color:var(--text2);
+  cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.btn-close-pick:hover{background:var(--bg2)}
+
+/* ============================================================
+   Toast & Loading
+   ============================================================ */
+.toast{
+  position:fixed;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  background:#1A1A1A;color:#fff;padding:9px 20px;border-radius:24px;
+  font-size:13px;z-index:200;opacity:0;transition:opacity .25s;
+  pointer-events:none;box-shadow:var(--shadow-md);
+}
+.toast.show{opacity:1}
+.spinner-wrap{display:flex;align-items:center;justify-content:center;padding:3rem;flex-direction:column;gap:12px}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--warm);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{font-size:13px;color:var(--text3)}
+.empty-state{text-align:center;padding:2.5rem 1rem}
+.empty-state .empty-icon{font-size:48px;margin-bottom:8px}
+.empty-state .empty-text{font-size:14px;color:var(--text3)}
+.empty-state .empty-hint{font-size:12px;color:var(--text3);margin-top:4px}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer{
+  text-align:center;padding:1.2rem 1rem 2rem;
+  border-top:0.5px solid var(--border);margin-top:0.5rem;
+}
+.footer p{font-size:11px;color:var(--text3);line-height:1.8}
+.footer a{color:var(--warm);text-decoration:none;font-weight:500}
+.footer a:hover{text-decoration:underline}
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media(max-width:480px){
+  .hero{padding:1.1rem 0.9rem 0.7rem}
+  .hero h1{font-size:22px}
+  .toolbar{padding:0.45rem 0.6rem}
+  .content{padding:0.3rem 0.6rem 0.6rem}
+  .dish-img{width:52px;height:52px}
+  .stall-name{font-size:14px}
+  .lb-grid{flex-direction:column}
+}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="header">
+  <!-- ========== Hero ========== -->
+  <div class="hero">
     <h1>川大吃什么</h1>
-    <p>江安校区 · 食堂档口 & 校外小摊评分</p>
+    <p class="subtitle">江安校区 · <span>真实评分</span> · 帮你决定今天吃什么</p>
   </div>
+
+  <!-- ========== Stats ========== -->
+  <div class="stats-bar" id="statsBar"></div>
+
+  <!-- ========== Leaderboard ========== -->
+  <div class="leaderboard" id="leaderboard"></div>
+
+  <!-- ========== Toolbar ========== -->
   <div class="toolbar">
-    <input class="search-input" id="searchInput" placeholder="搜索菜品或档口…"/>
-    <div class="sort-row">
-      <div class="pill active" data-sort="score">按评分</div>
-      <div class="pill" data-sort="count">按评价数</div>
-      <div class="pill" data-sort="price">按均价</div>
-      <button class="dir-btn" id="dirBtn">⇅ <span id="dirLabel">降序</span></button>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="搜索菜品、档口… Ctrl+K"/>
+    </div>
+    <div class="btn-group">
+      <button class="btn-primary btn-random" id="randomBtn">🎲 吃啥</button>
+      <button class="btn-primary btn-submit-new" id="submitNewBtn">＋ 投稿</button>
     </div>
   </div>
+  <div style="padding:0.35rem 0.8rem;display:flex;gap:5px;flex-wrap:wrap;border-bottom:0.5px solid var(--border);background:#fff">
+    <div class="pill active" data-sort="score">⭐ 按评分</div>
+    <div class="pill" data-sort="count">💬 按评价数</div>
+    <div class="pill" data-sort="price">💰 按均价</div>
+    <button class="dir-btn" id="dirBtn">⇅ <span id="dirLabel">降序</span></button>
+  </div>
+
+  <!-- ========== Content ========== -->
   <div class="content" id="mainContent"></div>
+
+  <!-- ========== Footer ========== -->
+  <div class="footer">
+    <p>🍜 数据由川大同学共同维护 · 评分仅代表个人口味</p>
+    <p>想添加新档口或菜品？<a href="#" onclick="document.getElementById('submitNewBtn').click();return false">点此投稿</a></p>
+  </div>
 </div>
 
+<!-- ========== 评分弹窗 ========== -->
 <div class="modal-overlay" id="rateModal" style="display:none">
   <div class="modal">
     <h3 id="modalTitle"></h3>
@@ -104,29 +476,96 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans G
       <span class="sp" data-v="1">★</span><span class="sp" data-v="2">★</span>
       <span class="sp" data-v="3">★</span><span class="sp" data-v="4">★</span><span class="sp" data-v="5">★</span>
     </div>
-    <textarea class="cmt-input" id="cmtInput" placeholder="写几句评价（可选）"></textarea>
+    <textarea id="cmtInput" placeholder="写几句评价，帮帮其他同学…（可选）"></textarea>
     <div class="modal-acts">
       <button class="btn-cancel" id="cancelBtn">取消</button>
-      <button class="btn-submit" id="submitBtn" disabled>提交</button>
+      <button class="btn-submit" id="submitBtn" disabled>提交评分</button>
     </div>
   </div>
 </div>
 
+<!-- ========== 随机推荐弹窗 ========== -->
+<div class="modal-overlay" id="randomModal" style="display:none">
+  <div class="modal" style="max-width:300px;text-align:center">
+    <div class="pick-result">
+      <div class="emoji">🎯</div>
+      <div class="name" id="pickName"></div>
+      <div class="stall" id="pickStall"></div>
+      <div class="price" id="pickPrice"></div>
+      <img class="pick-img" id="pickImg" style="display:none" alt=""/>
+      <div class="score-row" id="pickScore"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-again" id="btnAgain">🔄 再摇一次</button>
+      <button class="btn-close-pick" id="btnClosePick">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 投稿弹窗 ========== -->
+<div class="modal-overlay" id="submitModal" style="display:none">
+  <div class="modal" style="max-width:380px;max-height:90vh;overflow-y:auto">
+    <h3>📝 投稿新档口 / 菜品</h3>
+    <p class="sub">审核通过后会在页面上展示</p>
+    <div class="form-group">
+      <label class="form-label">投稿类型</label>
+      <select id="subType">
+        <option value="dish">为已有档口添加菜品</option>
+        <option value="stall">新增一个档口</option>
+      </select>
+    </div>
+    <div class="form-group" id="subParentGroup">
+      <label class="form-label">所属档口</label>
+      <select id="subParentStall"></select>
+    </div>
+    <div class="form-group" id="subGroupField" style="display:none">
+      <label class="form-label">所属分组</label>
+      <select id="subGroup">
+        <option value="校内食堂">校内食堂</option>
+        <option value="校外小摊">校外小摊</option>
+        <option value="附近饭店">附近饭店</option>
+      </select>
+    </div>
+    <div class="form-group" id="subStallNameField" style="display:none">
+      <label class="form-label">档口名称</label>
+      <input type="text" id="subStallName" placeholder="如：南门 · 烤冷面"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">菜品名称 <span style="color:var(--warm)">*</span></label>
+      <input type="text" id="subDishName" placeholder="如：加蛋烤冷面"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">价格（元）<span style="color:var(--warm)">*</span></label>
+      <input type="number" id="subPrice" placeholder="如：8" min="1" max="200" step="0.5"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">图片（可选）— 上传到 GitHub</label>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <input type="file" id="subImageFile" accept="image/*" style="display:none" onchange="handleImageFile(this)"/>
+        <button type="button" class="btn-cancel" onclick="document.getElementById('subImageFile').click()" style="font-size:12px;padding:6px 12px">📁 选择图片</button>
+        <span id="uploadFileName" style="font-size:11px;color:var(--text3)">未选择文件</span>
+      </div>
+      <div id="uploadPreview" style="display:none;margin-bottom:6px">
+        <img id="uploadPreviewImg" class="dish-img-preview" src="" alt="预览"/>
+      </div>
+      <div id="uploadStatus" class="upload-status"></div>
+      <input type="hidden" id="subImageUrl" value=""/>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">或直接粘贴图片链接：</div>
+      <input type="url" id="subImageUrlManual" placeholder="https://... 粘贴图片URL"/>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-cancel" id="cancelSubmitBtn">取消</button>
+      <button class="btn-submit" id="confirmSubmitBtn">提交审核</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Toast ========== -->
+<div class="toast" id="toast"></div>
+
 <script>
 // ============================================================
-// ✏️  数据区 —— 在这里添加/修改档口和菜品
-// 结构：校区 > 分组(校内食堂/校外小摊/附近饭店) > 档口 > 菜品
-//
-// 每个档口字段说明：
-//   id:     唯一英文标识，不能重复（随便起，如 'e3f1'）
-//   name:   显示名称
-//   type:   'c'=食堂  'o'=校外小摊  'r'=附近饭店
-//   dishes: 菜品数组，每项包含 id / name / price
-//
-// 每个菜品字段说明：
-//   id:    唯一英文标识，不能重复（如 'd041'）
-//   name:  菜品名称
-//   price: 价格（数字，单位元）
+// ✏️  数据区
 // ============================================================
 const DATA = [
   { campus:'江安校区', groups:[
@@ -137,7 +576,7 @@ const DATA = [
         {id:'d003',name:'素椒杂酱面',price:9}
       ]},
       { id:'e1f2', name:'东园食堂 1F · 轻食', type:'c', dishes:[
-        {id:'d004',name:'鸡胸肉沙拉',price:15},
+        {id:'d004',name:'鸡胸肉沙拉',price:15,image:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop'},
         {id:'d005',name:'藜麦碗',price:16}
       ]},
       { id:'e1f3', name:'东园食堂 1F · 小份菜', type:'c', dishes:[
@@ -146,23 +585,23 @@ const DATA = [
         {id:'d008',name:'干锅鸡',price:11}
       ]},
       { id:'e2f1', name:'东园食堂 2F · 煮面', type:'c', dishes:[
-        {id:'d009',name:'担担面',price:10},
+        {id:'d009',name:'担担面',price:10,image:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop'},
         {id:'d010',name:'番茄鸡蛋面',price:9}
       ]},
       { id:'e2f2', name:'东园食堂 2F · 意面', type:'c', dishes:[
-        {id:'d011',name:'黑椒牛肉意面',price:16},
+        {id:'d011',name:'黑椒牛肉意面',price:16,image:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=200&h=200&fit=crop'},
         {id:'d012',name:'番茄肉酱意面',price:14}
       ]},
       { id:'e1f4', name:'东园食堂 1F · 冒菜', type:'c', dishes:[
-        {id:'d013',name:'冒菜（自选）',price:13}
+        {id:'d013',name:'冒菜（自选）',price:13,image:'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=200&h=200&fit=crop'}
       ]},
       { id:'w2f1', name:'西园二餐 2F · 炒饭', type:'c', dishes:[
-        {id:'d014',name:'蛋炒饭',price:8},
+        {id:'d014',name:'蛋炒饭',price:8,image:'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&h=200&fit=crop'},
         {id:'d015',name:'腊肉炒饭',price:10}
       ]},
       { id:'w2f2', name:'西园二餐 2F · 现炒菜', type:'c', dishes:[
         {id:'d016',name:'宫爆鸡丁',price:12},
-        {id:'d017',name:'水煮肉片',price:14}
+        {id:'d017',name:'水煮肉片',price:14,image:'https://images.unsplash.com/photo-1626804475297-416e6cfd51b9?w=200&h=200&fit=crop'}
       ]},
       { id:'w2f3', name:'西园二餐 2F · 煮面', type:'c', dishes:[
         {id:'d018',name:'酸辣粉',price:9},
@@ -178,14 +617,14 @@ const DATA = [
     ]},
     { group:'校外小摊', stalls:[
       { id:'o1', name:'南门 · 新疆菜', type:'o', dishes:[
-        {id:'d023',name:'大盘鸡',price:35},
+        {id:'d023',name:'大盘鸡',price:35,image:'https://images.unsplash.com/photo-1599629954294-14f17a382158?w=200&h=200&fit=crop'},
         {id:'d024',name:'羊肉抓饭',price:18}
       ]},
       { id:'o2', name:'南门 · 自选菜盒饭', type:'o', dishes:[
         {id:'d025',name:'三菜一汤套餐',price:14}
       ]},
       { id:'o3', name:'南门 · 油泼面', type:'o', dishes:[
-        {id:'d026',name:'油泼面',price:10},
+        {id:'d026',name:'油泼面',price:10,image:'https://images.unsplash.com/photo-1591814468924-caf88d1232e1?w=200&h=200&fit=crop'},
         {id:'d027',name:'裤带面',price:11}
       ]},
       { id:'o4', name:'南门 · 冰粉', type:'o', dishes:[
@@ -196,7 +635,7 @@ const DATA = [
         {id:'d030',name:'鸡公煲（中）',price:42}
       ]},
       { id:'o6', name:'南门 · 兰州拉面', type:'o', dishes:[
-        {id:'d031',name:'大碗牛肉面',price:16},
+        {id:'d031',name:'大碗牛肉面',price:16,image:'https://images.unsplash.com/photo-1555126634-323283e090fa?w=200&h=200&fit=crop'},
         {id:'d032',name:'小碗牛肉面',price:13}
       ]},
       { id:'o7', name:'南门 · 沙县小吃', type:'o', dishes:[
@@ -220,14 +659,8 @@ const DATA = [
         {id:'d040',name:'里脊肉饼',price:9}
       ]}
     ]}
-    // 如需添加"附近饭店"分组，在此处继续添加：
-    // ,{ group:'附近饭店', stalls:[ ... ] }
   ]}
-  // 如需添加其他校区，在此处继续添加：
-  // ,{ campus:'望江校区', groups:[ ... ] }
 ];
-// ============================================================
-// ✏️  数据区结束
 // ============================================================
 
 // ============================================================
@@ -241,8 +674,130 @@ const api = (path, opts={}) => fetch(SUPABASE_URL + '/rest/v1/' + path, {
   ...opts
 });
 
-// ratings: { dish_id -> { sum, n, comments:[{s,t}] } }
+// ============================================================
+// 工具函数
+// ============================================================
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function hasRated(dishId) {
+  try { return JSON.parse(localStorage.getItem('scu_food_rated') || '[]').includes(dishId); }
+  catch(e) { return false; }
+}
+function markRated(dishId) {
+  try {
+    const set = JSON.parse(localStorage.getItem('scu_food_rated') || '[]');
+    if (!set.includes(dishId)) { set.push(dishId); localStorage.setItem('scu_food_rated', JSON.stringify(set)); }
+  } catch(e) {}
+}
+
+function stars(score, size) {
+  const cls = size === 'm' ? 'ms' : 's';
+  return Array.from({ length: 5 }, (_, i) =>
+    `<span class="${cls}${score && i < Math.round(score) ? ' on' : ''}">★</span>`
+  ).join('');
+}
+
+function tagHtml(type) {
+  if (type === 'c') return '<span class="tag tag-c">食堂</span>';
+  if (type === 'o') return '<span class="tag tag-o">校外</span>';
+  return '<span class="tag tag-r">饭店</span>';
+}
+
+// ============================================================
+// GitHub 图片上传（图片存储在 GitHub 仓库的 images/ 目录）
+// ============================================================
+// ⚠️ 去 https://github.com/settings/tokens 创建一个 Personal Access Token
+//    权限勾选 repo → 生成后粘贴到下面的 GITHUB_TOKEN
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
+const GITHUB_REPO = '0Mingo/scu-food';
+const GITHUB_BRANCH = 'main';
+const GITHUB_IMG_PATH = 'images/';
+
+async function uploadImageToGitHub(file) {
+  if (GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
+    throw new Error('请先配置 GitHub Token');
+  }
+  // 读取文件为 base64
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = () => reject(new Error('读取文件失败'));
+    reader.readAsDataURL(file);
+  });
+  // 生成文件名：时间戳 + 清理后的原名
+  const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const filename = Date.now() + '_' + cleanName;
+  const path = GITHUB_IMG_PATH + filename;
+  // 上传到 GitHub
+  const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + path, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + GITHUB_TOKEN,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: '📷 上传图片: ' + filename,
+      content: base64,
+      branch: GITHUB_BRANCH
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || '上传失败（状态码 ' + res.status + '）');
+  }
+  // 返回 GitHub raw URL
+  return 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/' + GITHUB_BRANCH + '/' + path;
+}
+
+async function handleImageFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  // 限制文件大小 5MB
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('图片不能超过 5MB');
+    input.value = '';
+    return;
+  }
+  document.getElementById('uploadFileName').textContent = file.name;
+  // 本地预览
+  const preview = document.getElementById('uploadPreview');
+  const previewImg = document.getElementById('uploadPreviewImg');
+  previewImg.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  // 上传到 GitHub
+  const statusEl = document.getElementById('uploadStatus');
+  statusEl.textContent = '⬆ 正在上传到 GitHub…';
+  statusEl.className = 'upload-status';
+  try {
+    const url = await uploadImageToGitHub(file);
+    document.getElementById('subImageUrl').value = url;
+    statusEl.textContent = '✅ 上传成功！';
+    statusEl.className = 'upload-status success';
+  } catch(e) {
+    statusEl.textContent = '❌ ' + e.message;
+    statusEl.className = 'upload-status error';
+  }
+}
+
+// ============================================================
+// 状态
+// ============================================================
 let ratings = {};
+let submissions = [];  // approved submissions from Supabase
 let openCampus = new Set(['江安校区']);
 let openGroups = new Set();
 let openStalls = new Set();
@@ -253,7 +808,9 @@ let modalDishId = null;
 let pickedStar = 0;
 let loading = true;
 
-// 从 Supabase 拉取所有评分，聚合到 ratings 对象
+// ============================================================
+// 数据加载
+// ============================================================
 async function loadRatings() {
   try {
     const res = await api('ratings?select=dish_id,score,comment&order=created_at.asc');
@@ -263,134 +820,582 @@ async function loadRatings() {
       if (!ratings[row.dish_id]) ratings[row.dish_id] = { sum: 0, n: 0, comments: [] };
       ratings[row.dish_id].sum += row.score;
       ratings[row.dish_id].n += 1;
-      if (row.comment) ratings[row.dish_id].comments.push({ s: row.score, t: row.comment });
+      if (row.comment) ratings[row.dish_id].comments.push({ s: row.score, t: esc(row.comment) });
     });
   } catch(e) {
     console.error('加载评分失败', e);
   }
+}
+
+async function loadSubmissions() {
+  try {
+    const res = await api('submissions?status=eq.approved&order=created_at.asc');
+    const rows = await res.json();
+    submissions = rows || [];
+  } catch(e) {
+    console.error('加载投稿失败', e);
+    submissions = [];
+  }
+}
+
+async function loadAll() {
+  await Promise.all([loadRatings(), loadSubmissions()]);
   loading = false;
   render();
 }
 
-async function submitRating(dishId, score, comment) {
-  await api('ratings', {
-    method: 'POST',
-    body: JSON.stringify({ dish_id: dishId, score, comment: comment || null })
-  });
-  // 本地立刻更新，不等重新拉取
-  if (!ratings[dishId]) ratings[dishId] = { sum: 0, n: 0, comments: [] };
-  ratings[dishId].sum += score;
-  ratings[dishId].n += 1;
-  if (comment) ratings[dishId].comments.push({ s: score, t: comment });
+// ============================================================
+// 计算
+// ============================================================
+function getDishScore(id) { const r = ratings[id]; return r && r.n > 0 ? r.sum / r.n : null; }
+function getDishCount(id) { return ratings[id]?.n || 0; }
+function getStallAvgPrice(stall) {
+  const p = stall.dishes.map(d => d.price);
+  return p.reduce((a, b) => a + b, 0) / p.length;
 }
+function getStallScore(stall) {
+  const s = stall.dishes.map(d => getDishScore(d.id)).filter(x => x !== null);
+  return s.length ? s.reduce((a, b) => a + b, 0) / s.length : null;
+}
+function getStallCount(stall) { return stall.dishes.reduce((a, d) => a + getDishCount(d.id), 0); }
 
-function getDishScore(id){const r=ratings[id];return r&&r.n>0?r.sum/r.n:null}
-function getDishCount(id){return ratings[id]?.n||0}
-function getStallAvgPrice(stall){const p=stall.dishes.map(d=>d.price);return p.reduce((a,b)=>a+b,0)/p.length}
-function getStallScore(stall){const s=stall.dishes.map(d=>getDishScore(d.id)).filter(x=>x!==null);return s.length?s.reduce((a,b)=>a+b,0)/s.length:null}
-function getStallCount(stall){return stall.dishes.reduce((a,d)=>a+getDishCount(d.id),0)}
-
-function sortStalls(stalls){
-  return stalls.slice().sort((a,b)=>{
-    let va,vb;
-    if(sortMode==='score'){va=getStallScore(a)||0;vb=getStallScore(b)||0}
-    else if(sortMode==='count'){va=getStallCount(a);vb=getStallCount(b)}
-    else{va=getStallAvgPrice(a);vb=getStallAvgPrice(b)}
-    return sortDir===1?va-vb:vb-va;
+function sortStalls(stalls) {
+  return stalls.slice().sort((a, b) => {
+    let va, vb;
+    if (sortMode === 'score') { va = getStallScore(a) || 0; vb = getStallScore(b) || 0; }
+    else if (sortMode === 'count') { va = getStallCount(a); vb = getStallCount(b); }
+    else { va = getStallAvgPrice(a); vb = getStallAvgPrice(b); }
+    return sortDir === 1 ? va - vb : vb - va;
   });
 }
 
-function stars(score,size){
-  const cls=size==='m'?'ms':'s';
-  return Array.from({length:5},(_,i)=>`<span class="${cls}${score&&i<Math.round(score)?' on':''}">★</span>`).join('');
-}
-function tagHtml(type){
-  if(type==='c')return'<span class="tag tag-c">食堂</span>';
-  if(type==='o')return'<span class="tag tag-o">校外</span>';
-  return'<span class="tag tag-r">饭店</span>';
+function getAllDishes() {
+  const result = [];
+  DATA.forEach(c => {
+    c.groups.forEach(g => {
+      g.stalls.forEach(s => {
+        s.dishes.forEach(d => {
+          result.push({ ...d, stallName: s.name, stallId: s.id, type: s.type, campus: c.campus, group: g.group });
+        });
+      });
+    });
+  });
+  // 合并审核通过的投稿
+  submissions.forEach(sub => {
+    const sid = 'sub_' + sub.id;
+    if (sub.type === 'stall') {
+      result.push({
+        id: 's_dish_' + sub.id, name: sub.dish_name, price: sub.price,
+        image: sub.image_url || null,
+        stallName: sub.stall_name, stallId: sid, type: 'o',
+        campus: sub.campus || '江安校区', group: sub.group_name || '校外小摊',
+        isSubmission: true
+      });
+    } else if (sub.type === 'dish' && sub.parent_stall_id) {
+      result.push({
+        id: 's_dish_' + sub.id, name: sub.dish_name, price: sub.price,
+        image: sub.image_url || null,
+        stallName: sub.stall_name || '未知档口', stallId: sub.parent_stall_id, type: 'o',
+        campus: sub.campus || '江安校区', group: sub.group_name || '校外小摊',
+        isSubmission: true
+      });
+    }
+  });
+  return result;
 }
 
-function renderDishes(stall){
-  let dishes=stall.dishes;
-  if(searchQ){const q=searchQ.toLowerCase();dishes=dishes.filter(d=>d.name.toLowerCase().includes(q)||d.name.includes(searchQ))}
-  return dishes.map(d=>{
-    const s=getDishScore(d.id);
-    const r=ratings[d.id];
-    const cmts=r?.comments?.length?`<div class="cmt-section">${r.comments.slice(-3).map(c=>`<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span>${c.t}</div>`).join('')}</div>`:'';
-    return`<div><div class="dish-row"><div class="dish-info"><div class="dish-name">${d.name}</div><div class="dish-price">¥${d.price}</div></div><div class="dish-right">${s!==null?`<span class="dish-score">${s.toFixed(1)}</span><div class="stars">${stars(s,'m')}</div><span class="dish-cnt">${r.n}条评价</span>`:'<span class="dish-cnt">暂无评分</span>'}<button class="rate-btn" onclick="openModal('${d.id}','${d.name}','${stall.name}')">打分</button></div></div>${cmts}</div>`;
+function getAllStalls() {
+  const stalls = [];
+  DATA.forEach(c => {
+    c.groups.forEach(g => {
+      g.stalls.forEach(s => stalls.push({ ...s, campus: c.campus, group: g.group }));
+    });
+  });
+  return stalls;
+}
+
+// ============================================================
+// 渲染：统计栏
+// ============================================================
+function renderStats() {
+  const el = document.getElementById('statsBar');
+  if (loading) { el.innerHTML = ''; return; }
+  const dishes = getAllDishes();
+  const totalStalls = new Set(dishes.map(d => d.stallId)).size;
+  const totalDishes = dishes.length;
+  const totalRatings = Object.values(ratings).reduce((a, r) => a + r.n, 0);
+  el.innerHTML = `
+    <div class="stat-item"><div class="stat-num">${totalStalls}</div><div class="stat-label">🏠 档口</div></div>
+    <div class="stat-item"><div class="stat-num">${totalDishes}</div><div class="stat-label">🍳 菜品</div></div>
+    <div class="stat-item"><div class="stat-num">${totalRatings}</div><div class="stat-label">💬 评价</div></div>
+  `;
+}
+
+// ============================================================
+// 渲染：排行榜
+// ============================================================
+function renderLeaderboard() {
+  const el = document.getElementById('leaderboard');
+  if (loading) { el.innerHTML = ''; return; }
+
+  const dishes = getAllDishes();
+  const byScore = dishes.filter(d => getDishCount(d.id) >= 2).sort((a, b) => (getDishScore(b.id) || 0) - (getDishScore(a.id) || 0)).slice(0, 3);
+  const byCount = dishes.filter(d => getDishCount(d.id) > 0).sort((a, b) => getDishCount(b.id) - getDishCount(a.id)).slice(0, 3);
+  const ranks = ['gold', 'silver', 'bronze'];
+
+  let html = '';
+  if (byScore.length > 0) {
+    html += '<div class="lb-title"><span class="icon">⭐</span>评分最高 TOP3</div><div class="lb-grid">';
+    byScore.forEach((d, i) => {
+      const s = getDishScore(d.id);
+      html += `<div class="lb-card" onclick="scrollToDish('${d.id}')"><div class="rank-badge ${ranks[i]}">${i + 1}</div><div class="lb-name">${esc(d.name)}</div><div class="lb-stall">${esc(d.stallName)}</div><div class="lb-val">${s.toFixed(1)} 分</div></div>`;
+    });
+    html += '</div>';
+  }
+  if (byCount.length > 0) {
+    html += '<div class="lb-title" style="margin-top:4px"><span class="icon">🔥</span>讨论最多 TOP3</div><div class="lb-grid">';
+    byCount.forEach((d, i) => {
+      html += `<div class="lb-card" onclick="scrollToDish('${d.id}')"><div class="rank-badge ${ranks[i]}">${i + 1}</div><div class="lb-name">${esc(d.name)}</div><div class="lb-stall">${esc(d.stallName)}</div><div class="lb-val">${getDishCount(d.id)} 条评价</div></div>`;
+    });
+    html += '</div>';
+  }
+  if (!byScore.length && !byCount.length) {
+    html = '<div class="lb-empty">还没有足够评分数据，快来打第一个分吧 👇</div>';
+  }
+  el.innerHTML = html;
+}
+
+function scrollToDish(dishId) {
+  let foundStall;
+  DATA.forEach(c => {
+    c.groups.forEach(g => {
+      g.stalls.forEach(s => {
+        if (s.dishes.some(d => d.id === dishId)) { foundStall = s; }
+      });
+    });
+  });
+  if (foundStall) {
+    openCampus.add('江安校区');
+    DATA[0].groups.forEach(g => {
+      if (g.stalls.some(s => s.id === foundStall.id)) {
+        openGroups.add('group_江安校区_' + g.group);
+      }
+    });
+    openStalls.add(foundStall.id);
+  }
+  searchQ = '';
+  document.getElementById('searchInput').value = '';
+  render();
+  // 如果来自投稿，也展开投稿区
+  setTimeout(() => {
+    const el = document.getElementById('dish-' + dishId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('highlight');
+      setTimeout(() => el.classList.remove('highlight'), 2200);
+    }
+  }, 150);
+}
+
+// ============================================================
+// 渲染：主体
+// ============================================================
+function renderDishes(stall) {
+  let dishes = stall.dishes;
+  if (searchQ) {
+    const q = searchQ.toLowerCase();
+    dishes = dishes.filter(d => d.name.toLowerCase().includes(q));
+  }
+  return dishes.map(d => {
+    const s = getDishScore(d.id);
+    const r = ratings[d.id];
+    const allCmts = r?.comments || [];
+    const showCount = 3;
+    const hasMore = allCmts.length > showCount;
+    const dishRated = hasRated(d.id);
+    const imgHtml = d.image
+      ? `<img class="dish-img" src="${esc(d.image)}" alt="${esc(d.name)}" loading="lazy" onerror="this.style.display='none'"/>`
+      : '';
+
+    let cmtsHtml = '';
+    if (allCmts.length) {
+      const displayCmts = allCmts.slice(-showCount);
+      cmtsHtml = '<div class="cmt-section">' +
+        displayCmts.map(c => `<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span><span class="cmt-text">${c.t}</span></div>`).join('') +
+        (hasMore ? `<div class="cmt-toggle" onclick="event.stopPropagation();toggleComments('${d.id}')">查看全部 ${allCmts.length} 条评价 ▾</div>` : '') +
+        '</div>';
+    }
+
+    return `<div id="dish-${d.id}"><div class="dish-row">${imgHtml}<div class="dish-info"><div class="dish-name">${esc(d.name)}${d.isSubmission ? ' <span class="tag-approved">社区投稿</span>' : ''}</div><div class="dish-price"><span class="unit">¥</span>${d.price}</div></div><div class="dish-right">${s !== null ? `<span class="dish-score">${s.toFixed(1)}</span><div class="stars">${stars(s, 'm')}</div><span class="dish-cnt">${r.n}条评价</span>` : '<span class="dish-cnt">暂无评分</span>'}<button class="rate-btn${dishRated ? ' done' : ''}" onclick="openModal('${d.id}','${esc(d.name)}','${esc(stall.name)}')">${dishRated ? '已评 ✓' : '打分'}</button></div></div>${cmtsHtml}</div>`;
   }).join('');
 }
 
-function renderStall(stall){
-  const avg=getStallScore(stall);
-  const total=getStallCount(stall);
-  const isOpen=openStalls.has(stall.id);
-  const avgPrice=getStallAvgPrice(stall).toFixed(1);
-  return`<div class="lv3-block"><div class="stall-card"><div class="stall-hdr" onclick="toggleStall('${stall.id}')"><div><div class="stall-name">${tagHtml(stall.type)}${stall.name}</div><div class="stall-meta">均价¥${avgPrice} · ${total>0?total+'条评价':'暂无评价'}</div></div><div class="score-chip">${avg!==null?`<span class="score-num">${avg.toFixed(1)}</span><div class="stars">${stars(avg)}</div>`:'<span style="font-size:11px;color:var(--text3)">待评分</span>'}<span class="chev${isOpen?' open':''}">⌄</span></div></div>${isOpen?`<div class="dishes">${renderDishes(stall)}</div>`:''}</div></div>`;
+function toggleComments(dishId) {
+  const r = ratings[dishId];
+  if (!r?.comments) return;
+  const dishEl = document.getElementById('dish-' + dishId);
+  if (!dishEl) return;
+  const section = dishEl.querySelector('.cmt-section');
+  if (!section) return;
+  const toggle = section.querySelector('.cmt-toggle');
+  if (toggle && toggle.textContent.includes('查看全部')) {
+    section.innerHTML = r.comments.map(c =>
+      `<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span><span class="cmt-text">${c.t}</span></div>`
+    ).join('') + `<div class="cmt-toggle" onclick="event.stopPropagation();toggleComments('${dishId}')">收起 ▴</div>`;
+  } else {
+    section.innerHTML = r.comments.slice(-3).map(c =>
+      `<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span><span class="cmt-text">${c.t}</span></div>`
+    ).join('') + (r.comments.length > 3 ? `<div class="cmt-toggle" onclick="event.stopPropagation();toggleComments('${dishId}')">查看全部 ${r.comments.length} 条评价 ▾</div>` : '');
+  }
 }
 
-function render(){
-  const el=document.getElementById('mainContent');
-  if(loading){el.innerHTML='<div class="empty">加载中…</div>';return}
-  const q=searchQ.toLowerCase();
-  let html='';let anyVisible=false;
-  DATA.forEach(campus=>{
-    const isCampusOpen=openCampus.has(campus.campus);
-    let groupsHtml='';
-    campus.groups.forEach(group=>{
-      const groupKey='group_'+campus.campus+'_'+group.group;
-      const isGroupOpen=openGroups.has(groupKey);
-      let stalls=sortStalls(group.stalls);
-      if(q){stalls=stalls.filter(s=>s.name.toLowerCase().includes(q)||s.name.includes(searchQ)||s.dishes.some(d=>d.name.toLowerCase().includes(q)||d.name.includes(searchQ)))}
-      if(!stalls.length)return;
-      anyVisible=true;
-      groupsHtml+=`<div class="lv2-block"><div class="lv-row lv2-row" onclick="toggleGroup('${groupKey}')"><span>${group.group}<span class="lv-count">${stalls.length}个档口</span></span><span class="chev${isCampusOpen&&isGroupOpen?' open':''}">⌄</span></div>${isCampusOpen&&isGroupOpen?stalls.map(s=>renderStall(s)).join(''):''}</div>`;
+function renderStall(stall) {
+  const avg = getStallScore(stall);
+  const total = getStallCount(stall);
+  const isOpen = openStalls.has(stall.id);
+  const avgPrice = getStallAvgPrice(stall).toFixed(1);
+  return `<div class="lv3-block"><div class="stall-card"><div class="stall-hdr" onclick="toggleStall('${stall.id}')"><div><div class="stall-name">${tagHtml(stall.type)}${esc(stall.name)}</div><div class="stall-meta">均价 ¥${avgPrice} · ${total > 0 ? total + '条评价' : '暂无评价'}</div></div><div class="score-chip">${avg !== null ? `<span class="score-num">${avg.toFixed(1)}</span><div class="stars">${stars(avg)}</div>` : '<span style="font-size:11px;color:var(--text3)">待评分</span>'}<span class="chev${isOpen ? ' open' : ''}">⌄</span></div></div>${isOpen ? `<div class="dishes">${renderDishes(stall)}</div>` : ''}</div></div>`;
+}
+
+function render() {
+  const el = document.getElementById('mainContent');
+  if (loading) {
+    el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div><span class="spinner-text">加载中…</span></div>';
+    return;
+  }
+  const q = searchQ.toLowerCase();
+  let html = '';
+  let anyVisible = false;
+
+  // 渲染硬编码数据
+  DATA.forEach(campus => {
+    const isCampusOpen = openCampus.has(campus.campus);
+    let groupsHtml = '';
+    campus.groups.forEach(group => {
+      const groupKey = 'group_' + campus.campus + '_' + group.group;
+      const isGroupOpen = openGroups.has(groupKey);
+      let stalls = sortStalls(group.stalls);
+      if (q) {
+        stalls = stalls.filter(s =>
+          s.name.toLowerCase().includes(q) ||
+          s.dishes.some(d => d.name.toLowerCase().includes(q))
+        );
+      }
+      if (!stalls.length) return;
+      anyVisible = true;
+      groupsHtml += `<div class="lv2-block"><div class="lv-row lv2-row" onclick="toggleGroup('${groupKey}')"><span>${esc(group.group)}<span class="lv-count">${stalls.length}个档口</span></span><span class="chev${isCampusOpen && isGroupOpen ? ' open' : ''}">⌄</span></div>${isCampusOpen && isGroupOpen ? stalls.map(s => renderStall(s)).join('') : ''}</div>`;
     });
-    if(!groupsHtml)return;
-    html+=`<div class="lv1-block"><div class="lv-row lv1-row" onclick="toggleCampus('${campus.campus}')"><span>${campus.campus}</span><span class="chev${isCampusOpen?' open':''}">⌄</span></div>${isCampusOpen?groupsHtml:''}</div>`;
+    if (!groupsHtml) return;
+    html += `<div class="lv1-block"><div class="lv-row lv1-row" onclick="toggleCampus('${campus.campus}')"><span>${esc(campus.campus)}</span><span class="chev${isCampusOpen ? ' open' : ''}">⌄</span></div>${isCampusOpen ? groupsHtml : ''}</div>`;
   });
-  el.innerHTML=anyVisible?html:'<div class="empty">没有找到相关档口或菜品</div>';
+
+  // 渲染审核通过的投稿（单独一个分组）
+  if (submissions.length > 0 && !q) {
+    const subGrouped = {};
+    submissions.forEach(sub => {
+      const key = (sub.group_name || '社区投稿');
+      if (!subGrouped[key]) subGrouped[key] = [];
+      subGrouped[key].push(sub);
+    });
+    Object.entries(subGrouped).forEach(([gname, subs]) => {
+      anyVisible = true;
+      html += `<div class="lv1-block"><div class="lv-row lv1-row" style="background:#FFFDF5"><span>🌟 ${esc(gname)} <span style="font-size:11px;color:var(--text3);font-weight:400;margin-left:4px">（社区投稿）</span></span><span class="chev">⌄</span></div>`;
+      subs.forEach(sub => {
+        const sid = 'sub_' + sub.id;
+        const dishId = 's_dish_' + sub.id;
+        const s = getDishScore(dishId);
+        const r = ratings[dishId];
+        const allCmts = r?.comments || [];
+        const dishRated = hasRated(dishId);
+        const imgHtml = sub.image_url
+          ? `<img class="dish-img" src="${esc(sub.image_url)}" alt="${esc(sub.dish_name)}" loading="lazy" onerror="this.style.display='none'"/>`
+          : '';
+
+        let cmtsHtml = '';
+        if (allCmts.length) {
+          cmtsHtml = '<div class="cmt-section">' +
+            allCmts.slice(-3).map(c => `<div class="cmt-item"><span class="cmt-stars">${'★'.repeat(c.s)}</span><span class="cmt-text">${c.t}</span></div>`).join('') +
+            '</div>';
+        }
+
+        html += `<div style="margin-left:10px;margin-bottom:6px"><div class="stall-card"><div class="dish-row" id="dish-${dishId}">${imgHtml}<div class="dish-info"><div class="dish-name">${esc(sub.dish_name)} <span class="tag-approved">投稿</span></div><div class="dish-price"><span class="unit">¥</span>${sub.price}</div></div><div class="dish-right">${s !== null ? `<span class="dish-score">${s.toFixed(1)}</span><div class="stars">${stars(s, 'm')}</div><span class="dish-cnt">${r.n}条评价</span>` : '<span class="dish-cnt">暂无评分</span>'}<button class="rate-btn${dishRated ? ' done' : ''}" onclick="openModal('${dishId}','${esc(sub.dish_name)}','${esc(sub.stall_name)}')">${dishRated ? '已评 ✓' : '打分'}</button></div></div>${cmtsHtml}</div></div>`;
+      });
+      html += '</div>';
+    });
+  }
+
+  el.innerHTML = anyVisible ? html : `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">没有找到相关档口或菜品</div><div class="empty-hint">试试其他关键词，或者<a href="#" onclick="document.getElementById('submitNewBtn').click();return false" style="color:var(--warm)">投稿新增</a></div></div>`;
+
+  renderStats();
+  renderLeaderboard();
 }
 
-function toggleCampus(name){if(openCampus.has(name))openCampus.delete(name);else openCampus.add(name);render()}
-function toggleGroup(key){if(openGroups.has(key))openGroups.delete(key);else openGroups.add(key);render()}
-function toggleStall(id){if(openStalls.has(id))openStalls.delete(id);else openStalls.add(id);render()}
-
-function openModal(dishId,dishName,stallName){
-  modalDishId=dishId;pickedStar=0;
-  document.getElementById('modalTitle').textContent=dishName;
-  document.getElementById('modalSub').textContent=stallName;
-  document.getElementById('cmtInput').value='';
-  document.getElementById('submitBtn').disabled=true;
-  document.querySelectorAll('.sp').forEach(s=>s.classList.remove('on'));
-  document.getElementById('rateModal').style.display='flex';
+// ============================================================
+// 交互：展开/折叠
+// ============================================================
+function toggleCampus(name) {
+  if (openCampus.has(name)) openCampus.delete(name); else openCampus.add(name);
+  render();
 }
-document.getElementById('cancelBtn').onclick=()=>{document.getElementById('rateModal').style.display='none'};
-document.getElementById('rateModal').onclick=e=>{if(e.target===document.getElementById('rateModal'))document.getElementById('rateModal').style.display='none'};
-document.querySelectorAll('.sp').forEach(star=>{
-  star.onclick=()=>{
-    pickedStar=parseInt(star.dataset.v);
-    document.querySelectorAll('.sp').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=pickedStar));
-    document.getElementById('submitBtn').disabled=false;
+function toggleGroup(key) {
+  if (openGroups.has(key)) openGroups.delete(key); else openGroups.add(key);
+  render();
+}
+function toggleStall(id) {
+  if (openStalls.has(id)) openStalls.delete(id); else openStalls.add(id);
+  render();
+}
+
+// ============================================================
+// 评分弹窗
+// ============================================================
+function openModal(dishId, dishName, stallName) {
+  modalDishId = dishId;
+  pickedStar = 0;
+  document.getElementById('modalTitle').textContent = dishName;
+  document.getElementById('modalSub').textContent = stallName;
+  document.getElementById('cmtInput').value = '';
+  document.getElementById('submitBtn').disabled = true;
+  document.querySelectorAll('.sp').forEach(s => s.classList.remove('on'));
+  document.getElementById('rateModal').style.display = 'flex';
+}
+
+document.getElementById('cancelBtn').onclick = () => {
+  document.getElementById('rateModal').style.display = 'none';
+};
+document.getElementById('rateModal').onclick = e => {
+  if (e.target === document.getElementById('rateModal'))
+    document.getElementById('rateModal').style.display = 'none';
+};
+document.querySelectorAll('.sp').forEach(star => {
+  star.onclick = () => {
+    pickedStar = parseInt(star.dataset.v);
+    document.querySelectorAll('.sp').forEach(s =>
+      s.classList.toggle('on', parseInt(s.dataset.v) <= pickedStar)
+    );
+    document.getElementById('submitBtn').disabled = false;
   };
 });
-document.getElementById('submitBtn').onclick=async()=>{
-  if(!pickedStar||!modalDishId)return;
-  const cmt=document.getElementById('cmtInput').value.trim();
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.textContent='提交中…';
+
+async function submitRating(dishId, score, comment) {
+  const safeComment = comment || null;
+  await api('ratings', {
+    method: 'POST',
+    body: JSON.stringify({ dish_id: dishId, score, comment: safeComment })
+  });
+  if (!ratings[dishId]) ratings[dishId] = { sum: 0, n: 0, comments: [] };
+  ratings[dishId].sum += score;
+  ratings[dishId].n += 1;
+  if (safeComment) ratings[dishId].comments.push({ s: score, t: esc(safeComment) });
+  markRated(dishId);
+}
+
+document.getElementById('submitBtn').onclick = async () => {
+  if (!pickedStar || !modalDishId) return;
+  const cmt = document.getElementById('cmtInput').value.trim();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '提交中…';
   await submitRating(modalDishId, pickedStar, cmt);
-  btn.textContent='提交';
-  document.getElementById('rateModal').style.display='none';
+  btn.textContent = '提交评分';
+  document.getElementById('rateModal').style.display = 'none';
+  showToast('评分成功！感谢反馈 🙏');
   render();
 };
-document.querySelectorAll('.pill').forEach(p=>{
-  p.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');sortMode=p.dataset.sort;render()};
+
+// ============================================================
+// 随机推荐
+// ============================================================
+function getRandomDish() {
+  const all = getAllDishes();
+  const rated = all.filter(d => getDishCount(d.id) > 0);
+  const pool = rated.length > 0 && Math.random() < 0.7 ? rated : all;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showRandomPick() {
+  const dish = getRandomDish();
+  if (!dish) return;
+  const s = getDishScore(dish.id);
+  const cnt = getDishCount(dish.id);
+  document.getElementById('pickName').textContent = dish.name;
+  document.getElementById('pickStall').textContent = dish.stallName;
+  document.getElementById('pickPrice').textContent = '¥' + dish.price;
+  document.getElementById('pickScore').innerHTML = s !== null
+    ? `<span style="font-weight:600;color:var(--warm);font-size:16px">${s.toFixed(1)} 分</span> ${stars(s, 'm')} <span style="font-size:12px;color:var(--text3)">${cnt}条评价</span>`
+    : '<span style="font-size:12px;color:var(--text3)">暂无评分，等你来评！</span>';
+  const imgEl = document.getElementById('pickImg');
+  if (dish.image) {
+    imgEl.src = dish.image;
+    imgEl.style.display = 'block';
+  } else {
+    imgEl.style.display = 'none';
+  }
+  document.getElementById('randomModal').style.display = 'flex';
+}
+
+document.getElementById('randomBtn').onclick = showRandomPick;
+document.getElementById('btnAgain').onclick = showRandomPick;
+document.getElementById('btnClosePick').onclick = () => {
+  document.getElementById('randomModal').style.display = 'none';
+};
+document.getElementById('randomModal').onclick = e => {
+  if (e.target === document.getElementById('randomModal'))
+    document.getElementById('randomModal').style.display = 'none';
+};
+
+// ============================================================
+// 排序 & 搜索
+// ============================================================
+document.querySelectorAll('.pill').forEach(p => {
+  p.onclick = () => {
+    document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    sortMode = p.dataset.sort;
+    render();
+  };
 });
-document.getElementById('dirBtn').onclick=()=>{sortDir*=-1;document.getElementById('dirLabel').textContent=sortDir===1?'升序':'降序';render()};
-document.getElementById('searchInput').oninput=e=>{searchQ=e.target.value.trim();render()};
-render(); // 先显示loading
-loadRatings(); // 拉取数据后重新渲染
+document.getElementById('dirBtn').onclick = () => {
+  sortDir *= -1;
+  document.getElementById('dirLabel').textContent = sortDir === 1 ? '升序' : '降序';
+  render();
+};
+
+let searchTimer;
+document.getElementById('searchInput').oninput = e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQ = e.target.value.trim();
+    if (searchQ) {
+      DATA.forEach(c => {
+        openCampus.add(c.campus);
+        c.groups.forEach(g => {
+          g.stalls.forEach(s => {
+            if (s.name.toLowerCase().includes(searchQ.toLowerCase()) ||
+                s.dishes.some(d => d.name.toLowerCase().includes(searchQ.toLowerCase()))) {
+              openGroups.add('group_' + c.campus + '_' + g.group);
+            }
+          });
+        });
+      });
+    }
+    render();
+  }, 250);
+};
+
+// ============================================================
+// 投稿功能
+// ============================================================
+function initSubmitForm() {
+  const allStalls = getAllStalls();
+  const sel = document.getElementById('subParentStall');
+  sel.innerHTML = allStalls.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+}
+
+document.getElementById('submitNewBtn').onclick = () => {
+  initSubmitForm();
+  document.getElementById('submitModal').style.display = 'flex';
+  // 重置表单
+  document.getElementById('subType').value = 'dish';
+  document.getElementById('subParentGroup').style.display = 'block';
+  document.getElementById('subGroupField').style.display = 'none';
+  document.getElementById('subStallNameField').style.display = 'none';
+  document.getElementById('subDishName').value = '';
+  document.getElementById('subPrice').value = '';
+  document.getElementById('subImageUrl').value = '';
+  document.getElementById('subImageUrlManual').value = '';
+  document.getElementById('subImageFile').value = '';
+  document.getElementById('uploadFileName').textContent = '未选择文件';
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('uploadStatus').textContent = '';
+  document.getElementById('uploadStatus').className = 'upload-status';
+};
+
+document.getElementById('subType').onchange = function() {
+  const isStall = this.value === 'stall';
+  document.getElementById('subParentGroup').style.display = isStall ? 'none' : 'block';
+  document.getElementById('subGroupField').style.display = isStall ? 'block' : 'none';
+  document.getElementById('subStallNameField').style.display = isStall ? 'block' : 'none';
+};
+
+document.getElementById('cancelSubmitBtn').onclick = () => {
+  document.getElementById('submitModal').style.display = 'none';
+};
+document.getElementById('submitModal').onclick = e => {
+  if (e.target === document.getElementById('submitModal'))
+    document.getElementById('submitModal').style.display = 'none';
+};
+
+document.getElementById('confirmSubmitBtn').onclick = async () => {
+  const type = document.getElementById('subType').value;
+  const dishName = document.getElementById('subDishName').value.trim();
+  const price = parseFloat(document.getElementById('subPrice').value);
+  const uploadedUrl = document.getElementById('subImageUrl').value.trim();
+  const manualUrl = document.getElementById('subImageUrlManual').value.trim();
+  const imageUrl = uploadedUrl || manualUrl || null;
+
+  if (!dishName) { showToast('请填写菜品名称'); return; }
+  if (!price || price <= 0) { showToast('请填写有效价格'); return; }
+
+  const btn = document.getElementById('confirmSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = '提交中…';
+
+  const body = {
+    type,
+    dish_name: dishName,
+    price,
+    image_url: imageUrl,
+    campus: '江安校区',
+    status: 'pending'
+  };
+
+  if (type === 'dish') {
+    body.parent_stall_id = document.getElementById('subParentStall').value;
+    const sel = document.getElementById('subParentStall');
+    body.stall_name = sel.options[sel.selectedIndex].text;
+    body.group_name = '校内食堂'; // 默认，实际应该从数据中查找
+  } else {
+    body.stall_name = document.getElementById('subStallName').value.trim();
+    body.group_name = document.getElementById('subGroup').value;
+    if (!body.stall_name) { showToast('请填写档口名称'); btn.disabled = false; btn.textContent = '提交审核'; return; }
+  }
+
+  try {
+    await api('submissions', {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+    showToast('投稿已提交，审核通过后会展示出来 ✅');
+    document.getElementById('submitModal').style.display = 'none';
+  } catch(e) {
+    console.error('投稿失败', e);
+    showToast('投稿失败，请稍后再试');
+  }
+  btn.disabled = false;
+  btn.textContent = '提交审核';
+};
+
+// ============================================================
+// 全局快捷键
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('rateModal').style.display = 'none';
+    document.getElementById('randomModal').style.display = 'none';
+    document.getElementById('submitModal').style.display = 'none';
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+
+// ============================================================
+// 启动
+// ============================================================
+render();
+loadAll();
 </script>
 </body>
 </html>

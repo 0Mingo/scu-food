@@ -539,7 +539,7 @@ body{
       <input type="number" id="subPrice" placeholder="如：8" min="1" max="200" step="0.5"/>
     </div>
     <div class="form-group">
-      <label class="form-label">图片（可选）— 上传到 GitHub</label>
+      <label class="form-label">图片（可选）— 拍照或选择图片上传</label>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
         <input type="file" id="subImageFile" accept="image/*" style="display:none" onchange="handleImageFile(this)"/>
         <button type="button" class="btn-cancel" onclick="document.getElementById('subImageFile').click()" style="font-size:12px;padding:6px 12px">📁 选择图片</button>
@@ -718,72 +718,46 @@ function tagHtml(type) {
 }
 
 // ============================================================
-// GitHub 图片上传（图片存储在 GitHub 仓库的 images/ 目录）
+// 图片上传到 Supabase Storage（food-images 桶）
 // ============================================================
-// ⚠️ 去 https://github.com/settings/tokens 创建一个 Personal Access Token
-//    权限勾选 repo → 生成后粘贴到下面的 GITHUB_TOKEN
-const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
-const GITHUB_REPO = '0Mingo/scu-food';
-const GITHUB_BRANCH = 'main';
-const GITHUB_IMG_PATH = 'images/';
-
-async function uploadImageToGitHub(file) {
-  if (GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
-    throw new Error('请先配置 GitHub Token');
-  }
-  // 读取文件为 base64
-  const base64 = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = () => reject(new Error('读取文件失败'));
-    reader.readAsDataURL(file);
-  });
-  // 生成文件名：时间戳 + 清理后的原名
+async function uploadImage(file) {
   const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
   const filename = Date.now() + '_' + cleanName;
-  const path = GITHUB_IMG_PATH + filename;
-  // 上传到 GitHub
-  const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + path, {
-    method: 'PUT',
+  // 直接上传到 Supabase Storage
+  const res = await fetch(SUPABASE_URL + '/storage/v1/object/food-images/' + filename, {
+    method: 'POST',
     headers: {
-      'Authorization': 'Bearer ' + GITHUB_TOKEN,
-      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
     },
-    body: JSON.stringify({
-      message: '📷 上传图片: ' + filename,
-      content: base64,
-      branch: GITHUB_BRANCH
-    })
+    body: file
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || '上传失败（状态码 ' + res.status + '）');
   }
-  // 返回 GitHub raw URL
-  return 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/' + GITHUB_BRANCH + '/' + path;
+  // 返回公开访问 URL
+  return SUPABASE_URL + '/storage/v1/object/public/food-images/' + filename;
 }
 
 async function handleImageFile(input) {
   const file = input.files[0];
   if (!file) return;
-  // 限制文件大小 5MB
   if (file.size > 5 * 1024 * 1024) {
     showToast('图片不能超过 5MB');
     input.value = '';
     return;
   }
   document.getElementById('uploadFileName').textContent = file.name;
-  // 本地预览
   const preview = document.getElementById('uploadPreview');
   const previewImg = document.getElementById('uploadPreviewImg');
   previewImg.src = URL.createObjectURL(file);
   preview.style.display = 'block';
-  // 上传到 GitHub
   const statusEl = document.getElementById('uploadStatus');
-  statusEl.textContent = '⬆ 正在上传到 GitHub…';
+  statusEl.textContent = '⬆ 正在上传…';
   statusEl.className = 'upload-status';
   try {
-    const url = await uploadImageToGitHub(file);
+    const url = await uploadImage(file);
     document.getElementById('subImageUrl').value = url;
     statusEl.textContent = '✅ 上传成功！';
     statusEl.className = 'upload-status success';
